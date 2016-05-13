@@ -101,20 +101,27 @@ qplot(data = aw_df_ccb, x=TypeOfRide)
 #Plot how many were injured or killed
 qplot(data=aw_df_ik, x=BodilyHarm)
 #Plot Precipitation
-ggplot(data=aw_df, aes(x=PRCP))+
+ggplot(data=aw_df, aes(x=Precipitation))+
   geom_histogram(breaks=seq(0, 3, 0.05)) #+ xlim(c(0.0001,3))
 #Plot Snow depth
-ggplot(aw_df, aes(x=SNWD))+
+ggplot(aw_df, aes(x=Snow_Depth))+
   geom_histogram(breaks=seq(0,168,1))
 #Plot Snowfall
-ggplot(aw_df, aes(x=SNOW)) +
+ggplot(aw_df, aes(x=Snowfall)) +
   geom_histogram(breaks=seq(0,32,0.2)) #+xlim(.01,22)
 #Plot max temperature
-ggplot(aw_df, aes(x=TMAX))+
+ggplot(aw_df, aes(x=Max_Temperature))+
   geom_histogram(breaks=seq(1,61,1))
 #Plot minimum temperature
-ggplot(aw_df, aes(x=TMIN))+
+ggplot(aw_df, aes(x=Min_Temperature))+
   geom_histogram(breaks=seq(-13,40,1))
 #Plot temperature at time of observation
-ggplot(aw_df, aes(x=TOBS))+
+ggplot(aw_df, aes(x=Temperature_at_observation_time))+
   geom_histogram()
+# Plot average wind speed
+ggplot(aw_df, aes(x=Average_Wind_Speed))+
+  geom_histogram(breaks=seq(0, 6, .1))
+# Plot Highest wind speed
+ggplot(aw_df, aes(x=Max_Wind_Speed))+
+  geom_histogram(breaks=seq(0,31.6,.1))
+
