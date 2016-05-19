@@ -67,6 +67,14 @@ avalInfo$Coordinates <- colsplit(avalInfo$Coordinates,",", c("Latitude", "Longit
 avalInfo$Coordinates$Latitude <- gsub("\\b0\\b","", avalInfo$Coordinates$Latitude)
 avalInfo$Coordinates$Latitude <- as.numeric(as.character(avalInfo$Coordinates$Latitude))
 avalInfo$Coordinates$Longitude <- as.numeric(as.character(gsub("\\b0\\b","", avalInfo$Coordinates$Longitude)))
+#Change column names
+avalInfo$Latitude <- avalInfo$Coordinates$Latitude
+avalInfo$Longitude <- avalInfo$Coordinates$Longitude
+avalInfo$Coordinates <- NULL
+
+
+#Fill in blanks with NA
+avalInfo$Weak.Layer[avalInfo$Weak.Layer==""] <- NA
 
 # Create ordered data (in this case I ordered it so that NE is centered, because then it looks normal)
 #avalInfo$Aspect = factor(avalInfo$Aspect, levels=c("West", "Northwest", "North", "Northeast", "East", "Southeast", "South", ""), ordered = TRUE)
