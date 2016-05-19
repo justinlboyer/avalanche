@@ -133,3 +133,30 @@ aw_df$Buried...Partly <- NULL
 aw_df$Killed <- NULL
 aw_df$Injured <- NULL
 
+
+
+#Create data frame for weather when no avalanches occured
+#First create the data frame for wind and weather
+no_a_df <- merge(weatInfo,wndInfo, by.x = 'DATE', by.y = 'DATE')
+#Remove variables with >90% NA
+no_a_df$STATION <- NULL
+no_a_df$STATION_NAME <- NULL
+no_a_df$MDPR <- NULL
+no_a_df$MDSF <- NULL
+no_a_df$DAPR<- NULL
+no_a_df$DASF <- NULL
+no_a_df$WT01 <- NULL
+no_a_df$WT06 <- NULL
+no_a_df$WT05 <- NULL
+no_a_df$WT11 <- NULL
+no_a_df$WT04 <- NULL
+no_a_df$WT03 <- NULL
+
+#First remove months 07,08,09, because avalanche season runs oct.-june (at most) then so weather data would be inappropriate
+#Need to fix so that outlier dates are not included, such as June
+no_a_df <- no_a_df[grep("-0[789]-", no_a_df$DATE,invert = TRUE),]
+#Now remove all the days that avalanches occured
+for(i in length(aw_df$Date)){
+  no_a_df <- no_a_df[!(no_a_df$DATE==aw_df$Date[i]),]
+}
+
