@@ -3,6 +3,16 @@
 source(file="loadData.R" )
 
 
+#Look at boxplots of avalanche weather and non avalanche weather
+boxplot(no_a_df$Precipitation, aw_df$Precipitation)
+boxplot(no_a_df$Snowfall, aw_df$Snowfall)
+boxplot(no_a_df$Snow_Depth, aw_df$Snow_Depth)
+boxplot(no_a_df$Max_Temperature, aw_df$Max_Temperature)
+boxplot(no_a_df$Min_Temperature, aw_df$Min_Temperature)
+boxplot(no_a_df$Temperature_at_observation_time, aw_df$Temperature_at_observation_time)
+boxplot(no_a_df$Average_Wind_Speed, aw_df$Average_Wind_Speed)
+boxplot(no_a_df$Max_Wind_Speed, aw_df$Max_Wind_Speed)
+
 #Quick look at things that might be associated
 #As min temp increases so does the liklihood of bodily injury
 summary(lm(aw_df_ik$BodilyHarmN~aw_df_ik$TMIN))
