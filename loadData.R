@@ -156,7 +156,14 @@ no_a_df$WT03 <- NULL
 #Need to fix so that outlier dates are not included, such as June
 no_a_df <- no_a_df[grep("-0[789]-", no_a_df$DATE,invert = TRUE),]
 #Now remove all the days that avalanches occured
-for(i in length(aw_df$Date)){
-  no_a_df <- no_a_df[!(no_a_df$DATE==aw_df$Date[i]),]
+test <- no_a_df
+store <- c(0)
+for(i in 1:length(aw_df$Date)){
+  #print(paste0("the it is ", l))
+  test <- subset(test, DATE != aw_df$Date[i])
+  store <- c(store, length(test$DATE))
+  #no_a_df <- no_a_df[!(no_a_df$DATE==aw_df$Date[i]),]
 }
-
+# Check that dates are removed
+test$DATE[which(test$Snowfall=='32')]
+aw_df$Date[which(aw_df$Snowfall=='32')]
