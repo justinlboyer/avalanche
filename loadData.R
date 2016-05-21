@@ -1,7 +1,7 @@
 # Load data, clean and tidy it.
 
 #Set working directory
-setwd("C:/Users/Owner/Documents/DataScience/avalanche")
+#setwd("C:/Users/Owner/Documents/DataScience/avalanche")
 #Load in csv files
 avalInfo <- read.csv('avalanches_raw.csv')
 weatInfo <- read.csv('altaGuardWeather6516.csv', na.strings = -9999)
@@ -33,8 +33,12 @@ wndInfo$STATION <- NULL
 
 #Make the "dates variable", dates
 #Fix dates in month/day/year format to month-day-year(2)
-avalInfo$Date <- gsub("^([0-9]{2})/([0-9]{1,2})/[0-9]{2}([0-9]{2})$","\\1-\\2-\\3",avalInfo$Date)
-avalInfo$Date <- as.Date( as.character(avalInfo$Date), format="%m-%d-%y")
+avalInfo$Date <-gsub("^([0-9]{2})-([0-9]{1,2})-([0][0-9])$","\\1-\\2-20\\3",avalInfo$Date)
+avalInfo$Date <-gsub("^([0-9]{2})-([0-9]{1,2})-([01][0123456])$","\\1-\\2-20\\3",avalInfo$Date)
+avalInfo$Date <-gsub("^([0-9]{2})-([0-9]{1,2})-([23456789][0-9])$","\\1-\\2-19\\3",avalInfo$Date)
+avalInfo$Date <- gsub("^([0-9]{2})/([0-9]{1,2})/([0-9]{4})$","\\1-\\2-\\3",avalInfo$Date)
+
+avalInfo$Date <- as.Date( as.character(avalInfo$Date), format="%m-%d-%Y")
 weatInfo$DATE <-as.Date(as.character(weatInfo$DATE), format="%Y%m%d")
 wndInfo$DATE <- as.Date(as.character(wndInfo$DATE), format = "%Y%m%d")
 # Check that they are dates
@@ -73,6 +77,20 @@ avalInfo$Longitude <- avalInfo$Coordinates$Longitude
 avalInfo$Coordinates <- NULL
 
 
+# Remove variables that are not usable
+weatInfo$STATION <- NULL
+weatInfo$STATION_NAME <- NULL
+weatInfo$MDPR <- NULL
+weatInfo$MDSF <- NULL
+weatInfo$DAPR<- NULL
+weatInfo$DASF <- NULL
+weatInfo$WT01 <- NULL
+weatInfo$WT06 <- NULL
+weatInfo$WT05 <- NULL
+weatInfo$WT11 <- NULL
+weatInfo$WT04 <- NULL
+weatInfo$WT03 <- NULL
+
 #Fill in blanks with NA
 avalInfo$Weak.Layer[avalInfo$Weak.Layer==""] <- NA
 
@@ -84,19 +102,7 @@ avalInfo$Weak.Layer[avalInfo$Weak.Layer==""] <- NA
 aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
 #Merge the combined data set with the wind info
 aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
-#Remove data that is missing at least 90% of its observations
-aw_df$STATION <- NULL
-aw_df$STATION_NAME <- NULL
-aw_df$MDPR <- NULL
-aw_df$MDSF <- NULL
-aw_df$DAPR<- NULL
-aw_df$DASF <- NULL
-aw_df$WT01 <- NULL
-aw_df$WT06 <- NULL
-aw_df$WT05 <- NULL
-aw_df$WT11 <- NULL
-aw_df$WT04 <- NULL
-aw_df$WT03 <- NULL
+
 
 #Create data frame for caught, carried, and buried
 ccb <- data.frame(date=aw_df$Date, Caught=aw_df$Caught, Carried=aw_df$Carried, Buried.Partly=aw_df$Buried...Partly, Buried.Fully=aw_df$Buried...Fully)
@@ -133,24 +139,39 @@ aw_df$Buried...Partly <- NULL
 aw_df$Killed <- NULL
 aw_df$Injured <- NULL
 
+#Merge all dates avalanche and no avalanche
+dtes <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = TRUE, all.x = TRUE)
+dtes <- merge(dtes, wndInfo, by.x = "Date", by.y="DATE", all.x = TRUE)
+#Remove all dates between not in interquartile range of when we have info for avalances
+#There is a max of 2068 in dates, so remove that
+temp <- subset(dtes, dtes$Date!="2068-02-19")
+#First find out the range of dates
+x <- gsub("^[0-9]{4}-([0-9][0-9])-[0-9]{2}$",'\\1',aw_df$Date)
+#Identify probabilities
+library(ggplot2)
+qplot(x)
+length(x[which(x=='05')])/length(x)
+#Remove dates from 05-10 inclusive
+dtes <- dtes[grep("-[01][567890]-", no_a_df$DATE,invert = TRUE),]
+
 
 
 #Create data frame for weather when no avalanches occured
 #First create the data frame for wind and weather
 no_a_df <- merge(weatInfo,wndInfo, by.x = 'DATE', by.y = 'DATE')
 #Remove variables with >90% NA
-no_a_df$STATION <- NULL
-no_a_df$STATION_NAME <- NULL
-no_a_df$MDPR <- NULL
-no_a_df$MDSF <- NULL
-no_a_df$DAPR<- NULL
-no_a_df$DASF <- NULL
-no_a_df$WT01 <- NULL
-no_a_df$WT06 <- NULL
-no_a_df$WT05 <- NULL
-no_a_df$WT11 <- NULL
-no_a_df$WT04 <- NULL
-no_a_df$WT03 <- NULL
+#no_a_df$STATION <- NULL
+#no_a_df$STATION_NAME <- NULL
+#no_a_df$MDPR <- NULL
+#no_a_df$MDSF <- NULL
+#no_a_df$DAPR<- NULL
+#no_a_df$DASF <- NULL
+#no_a_df$WT01 <- NULL
+#no_a_df$WT06 <- NULL
+#no_a_df$WT05 <- NULL
+#no_a_df$WT11 <- NULL
+#no_a_df$WT04 <- NULL
+#no_a_df$WT03 <- NULL
 
 #First remove months 07,08,09, because avalanche season runs oct.-june (at most) then so weather data would be inappropriate
 #Need to fix so that outlier dates are not included, such as June
