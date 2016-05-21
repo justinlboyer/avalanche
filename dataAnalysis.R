@@ -4,7 +4,14 @@ source(file="loadData.R" )
 
 
 #Look at boxplots of avalanche weather and non avalanche weather
+# Precipitation is a big deal
 boxplot(no_a_df$Precipitation, aw_df$Precipitation)
+summary(aw_df$Precipitation)
+summary(no_a_df$Precipitation)
+# The probability an avalanche will occur when it snows more than .21 mm is 48% as opposed to 19% chance of not having an avalanche when it snows more than .21mm
+length(aw_df$Precipitation[which(aw_df$Precipitation>=quantile(aw_df$Precipitation, 0.5, na.rm = TRUE))])/length(aw_df$Precipitation)
+length(no_a_df$Precipitation[which(no_a_df$Precipitation>=quantile(aw_df$Precipitation, 0.5, na.rm = TRUE))])/length(no_a_df$Precipitation)
+
 boxplot(no_a_df$Snowfall, aw_df$Snowfall)
 boxplot(no_a_df$Snow_Depth, aw_df$Snow_Depth)
 boxplot(no_a_df$Max_Temperature, aw_df$Max_Temperature)
