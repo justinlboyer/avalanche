@@ -75,35 +75,12 @@ avalInfo$Coordinates$Longitude <- as.numeric(as.character(gsub("\\b0\\b","", ava
 avalInfo$Latitude <- avalInfo$Coordinates$Latitude
 avalInfo$Longitude <- avalInfo$Coordinates$Longitude
 avalInfo$Coordinates <- NULL
-
-
-# Remove variables that are not usable
-weatInfo$STATION <- NULL
-weatInfo$STATION_NAME <- NULL
-weatInfo$MDPR <- NULL
-weatInfo$MDSF <- NULL
-weatInfo$DAPR<- NULL
-weatInfo$DASF <- NULL
-weatInfo$WT01 <- NULL
-weatInfo$WT06 <- NULL
-weatInfo$WT05 <- NULL
-weatInfo$WT11 <- NULL
-weatInfo$WT04 <- NULL
-weatInfo$WT03 <- NULL
-
-#Fill in blanks with NA
-avalInfo$Weak.Layer[avalInfo$Weak.Layer==""] <- NA
-
-# Create ordered data (in this case I ordered it so that NE is centered, because then it looks normal)
-#avalInfo$Aspect = factor(avalInfo$Aspect, levels=c("West", "Northwest", "North", "Northeast", "East", "Southeast", "South", ""), ordered = TRUE)
-
-#Merge data sets
-#Merge the avalanche and weather data sets by date
-aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
-#Merge the combined data set with the wind info
-aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
-
-
+avalInfo$WeakLayer <- avalInfo$Weak.Layer
+avalInfo$Weak.Layer <- NULL
+avalInfo$BuriedFully <- avalInfo$Buried...Fully
+avalInfo$BuriedPartly <- avalInfo$Buried...Partly
+avalInfo$Buried...Fully <- NULL
+avalInfo$Buried...Partly <- NULL
 #Create data frame for caught, carried, and buried
 ccb <- data.frame(date=aw_df$Date, Caught=aw_df$Caught, Carried=aw_df$Carried, Buried.Partly=aw_df$Buried...Partly, Buried.Fully=aw_df$Buried...Fully)
 # Now use that data frame to gather column names into a key "TypeOfRide" variable
@@ -132,58 +109,52 @@ aw_df_ik <- merge(aw_df, ik, by.x = "Date", all.x = FALSE, by.y="date", all.y=TR
 aw_df_ik$Killed <- NULL
 aw_df_ik$Injured <- NULL
 #Remove the data that has been tidied into other data sets
-aw_df$Caught <- NULL
-aw_df$Carried <- NULL
-aw_df$Buried...Fully <- NULL
-aw_df$Buried...Partly <- NULL
-aw_df$Killed <- NULL
-aw_df$Injured <- NULL
+avalInfo$Caught <- NULL
+avalInfo$Carried <- NULL
+avalInfo$BuriedFully <- NULL
+avalInfo$BuriedPartly <- NULL
+avalInfo$Killed <- NULL
+avalInfo$Injured <- NULL
 
-#Merge all dates avalanche and no avalanche
-dtes <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = TRUE, all.x = TRUE)
-dtes <- merge(dtes, wndInfo, by.x = "Date", by.y="DATE", all.x = TRUE)
+
+
+# Remove variables that are not usable
+weatInfo$STATION <- NULL
+weatInfo$STATION_NAME <- NULL
+weatInfo$MDPR <- NULL
+weatInfo$MDSF <- NULL
+weatInfo$DAPR<- NULL
+weatInfo$DASF <- NULL
+weatInfo$WT01 <- NULL
+weatInfo$WT06 <- NULL
+weatInfo$WT05 <- NULL
+weatInfo$WT11 <- NULL
+weatInfo$WT04 <- NULL
+weatInfo$WT03 <- NULL
+
+#Fill in blanks with NA
+avalInfo$weakLayer[avalInfo$weakLayer==""] <- NA
+
+# Create ordered data (in this case I ordered it so that NE is centered, because then it looks normal)
+#avalInfo$Aspect = factor(avalInfo$Aspect, levels=c("West", "Northwest", "North", "Northeast", "East", "Southeast", "South", ""), ordered = TRUE)
+
+#Merge data sets
+#Merge the avalanche and weather data sets by date
+#aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
+#Merge the combined data set with the wind info
+#aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
+
+#Creat full data frame, containing all dates
+fl_df <- merge(avalInfo, weatInfo, by.x = 'Date', by.y = 'DATE', all.y = TRUE)
+fl_df <- merge(fl_df, wndInfo, by.x='Date', by.y = 'DATE', all.x=TRUE)
+
+
 #Remove all dates between not in interquartile range of when we have info for avalances
-#There is a max of 2068 in dates, so remove that
-temp <- subset(dtes, dtes$Date!="2068-02-19")
 #First find out the range of dates
-x <- gsub("^[0-9]{4}-([0-9][0-9])-[0-9]{2}$",'\\1',aw_df$Date)
+x <- gsub("^[0-9]{4}-([0-9][0-9])-[0-9]{2}$",'\\1',avalInfo$Date)
 #Identify probabilities
 library(ggplot2)
 qplot(x)
 length(x[which(x=='05')])/length(x)
-#Remove dates from 05-10 inclusive
-dtes <- dtes[grep("-[01][567890]-", no_a_df$DATE,invert = TRUE),]
-
-
-
-#Create data frame for weather when no avalanches occured
-#First create the data frame for wind and weather
-no_a_df <- merge(weatInfo,wndInfo, by.x = 'DATE', by.y = 'DATE')
-#Remove variables with >90% NA
-#no_a_df$STATION <- NULL
-#no_a_df$STATION_NAME <- NULL
-#no_a_df$MDPR <- NULL
-#no_a_df$MDSF <- NULL
-#no_a_df$DAPR<- NULL
-#no_a_df$DASF <- NULL
-#no_a_df$WT01 <- NULL
-#no_a_df$WT06 <- NULL
-#no_a_df$WT05 <- NULL
-#no_a_df$WT11 <- NULL
-#no_a_df$WT04 <- NULL
-#no_a_df$WT03 <- NULL
-
-#First remove months 07,08,09, because avalanche season runs oct.-june (at most) then so weather data would be inappropriate
-#Need to fix so that outlier dates are not included, such as June
-no_a_df <- no_a_df[grep("-0[789]-", no_a_df$DATE,invert = TRUE),]
-#Now remove all the days that avalanches occured
-#test <- no_a_df
-#store <- c(0)
-for(i in 1:length(aw_df$Date)){
-  #print(paste0("the it is ", l))
-  no_a_df <- subset(no_a_df, DATE != aw_df$Date[i])
-  #store <- c(store, length(test$DATE))
-}
-# Check that dates are removed
-no_a_df$DATE[which(no_a_df$Snowfall=='32')]
-aw_df$Date[which(aw_df$Snowfall=='32')]
+#Remove months dates from 05-10 inclusive
+fl_df <- fl_df[grep("-[01][567890]-", fl_df$Date),]
