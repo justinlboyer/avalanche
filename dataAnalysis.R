@@ -5,12 +5,13 @@ source(file="loadData.R" )
 
 #Look at boxplots of avalanche weather and non avalanche weather
 # Precipitation is a big deal
-boxplot(fl_df$Precipitation[is.na(fl_df$Place)], fl_df$Precipitation[!is.na(fl_df$Place)])
-summary(fl_df$Precipitation[is.na(fl_df$Place)])
+boxplot(fl_df$Precipitation, fl_df$Precipitation[!is.na(fl_df$Place)])
+summary(fl_df$Precipitation)
 summary(fl_df$Precipitation[!is.na(fl_df$Place)])
-# The probability an avalanche will occur when it snows more than .21 mm is 48% as opposed to 19% chance of not having an avalanche when it snows more than .21mm
-length(fl_df$Precipitation[which(fl_df$Precipitation[is.na(fl_df$Place)]>=quantile(fl_df$Precipitation[is.na(fl_df$Place)], 0.5, na.rm = TRUE))])/length(fl_df$Precipitation)
-length(fl_df$Precipitation[which(fl_df$Precipitation[!is.na(fl_df$Place)]>=quantile(fl_df$Precipitation[!is.na(fl_df$Place)], 0.5, na.rm = TRUE))])/length(fl_df$Precipitation)
+# The probability an avalanche occurs when it snows more than 0.21mm is:
+length(fl_df$Precipitation[which(fl_df$Precipitation[!is.na(fl_df$Place)]>=quantile(fl_df$Precipitation[!is.na(fl_df$Place)], 0.5, na.rm = TRUE))])/length(fl_df$Precipitation[!is.na(fl_df$Place)])
+#Compared to the probability it snows more than 0.21mm during the avalanche months
+length(fl_df$Precipitation[which(fl_df$Precipitation >= quantile(fl_df$Precipitation[!is.na(fl_df$Place)], 0.5, na.rm = TRUE))])/length(fl_df$Precipitation)
 
 boxplot(fl_df$Snowfall, fl_df$Snowfall)
 boxplot(fl_df$Snow_Depth, fl_df$Snow_Depth)
