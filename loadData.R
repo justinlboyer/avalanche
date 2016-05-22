@@ -132,8 +132,6 @@ weatInfo$WT11 <- NULL
 weatInfo$WT04 <- NULL
 weatInfo$WT03 <- NULL
 
-#Fill in blanks with NA
-avalInfo$weakLayer[avalInfo$weakLayer==""] <- NA
 
 # Create ordered data (in this case I ordered it so that NE is centered, because then it looks normal)
 #avalInfo$Aspect = factor(avalInfo$Aspect, levels=c("West", "Northwest", "North", "Northeast", "East", "Southeast", "South", ""), ordered = TRUE)
@@ -145,9 +143,11 @@ avalInfo$weakLayer[avalInfo$weakLayer==""] <- NA
 #aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
 
 #Creat full data frame, containing all dates
-fl_df <- merge(avalInfo, weatInfo, by.x = 'Date', by.y = 'DATE', all.y = TRUE)
+fl_df <- merge(avalInfo, weatInfo, by.x = 'Date', by.y = 'DATE', all.y = TRUE, all.x = TRUE)
 fl_df <- merge(fl_df, wndInfo, by.x='Date', by.y = 'DATE', all.x=TRUE)
-
+#Fill blanks with NA
+fl_df$WeakLayer[fl_df$WeakLayer ==""] <- NA
+fl_df$Aspect[fl_df$Aspect==''] <- NA
 
 #Remove all dates between not in interquartile range of when we have info for avalances
 #First find out the range of dates
