@@ -170,3 +170,10 @@ colnames(temp)[2] <- "NumberOfAvalanches"
 numav <- merge(numav, temp, by.x='Date', by.y='Date', all.x = TRUE)
 #Replace NA with 0 in number of avalanches column
 numav$NumberOfAvalanches[is.na(numav$NumberOfAvalanches)] <- 0
+#Set values with NA and number of avalanches=0 to 0
+numav$Depth[numav$NumberOfAvalanches==0] <- 0
+numav$Width[numav$NumberOfAvalanches==0] <- 0
+numav$Vertical[numav$NumberOfAvalanches==0] <- 0
+numav$Elevation[numav$NumberOfAvalanches==0] <- 0
+numav$Latitude[numav$NumberOfAvalanches==0] <- 0
+numav$Longitude[numav$NumberOfAvalanches==0] <- 0
