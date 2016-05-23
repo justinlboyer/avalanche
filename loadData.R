@@ -158,3 +158,15 @@ qplot(x)
 length(x[which(x=='05')])/length(x)
 #Remove months dates from 05-10 inclusive
 fl_df <- fl_df[grep("-[01][567890]-", fl_df$Date),]
+
+
+#Create data frame that contains the number of avalanches that have occure
+numav <- fl_df
+numav <- numav[!duplicated(test$Date),]
+#Create a did avalanche column
+library(plyr)
+temp <- ddply(avalInfo,.(Date),nrow)
+colnames(temp)[2] <- "NumberOfAvalanches"
+numav <- merge(numav, temp, by.x='Date', by.y='Date', all.x = TRUE)
+#Replace NA with 0 in number of avalanches column
+numav$NumberOfAvalanches[is.na(numav$NumberOfAvalanches)] <- 0
