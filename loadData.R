@@ -177,3 +177,10 @@ numav$Vertical[numav$NumberOfAvalanches==0] <- 0
 numav$Elevation[numav$NumberOfAvalanches==0] <- 0
 numav$Latitude[numav$NumberOfAvalanches==0] <- 0
 numav$Longitude[numav$NumberOfAvalanches==0] <- 0
+
+#Check that there are enough avalanches
+store =0
+for (i in 1:100){
+  store = store + sum(numav$NumberOfAvalanches[numav$NumberOfAvalanches==i])
+}
+print(store>=length(avalInfo[avalInfo$Region=='Sal',]))
