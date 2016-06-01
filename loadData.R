@@ -62,6 +62,7 @@ avalInfo$Depth <- as.numeric(as.character(avalInfo$Depth))
 #Multiply the feet by 12
 avalInfo$Depth[ftvals] <- avalInfo$Depth[ftvals]*12
 
+
 # Fix Coordinates, so that they are split into lat and long
 # First introduce NA's
 avalInfo$Coordinates[avalInfo$Coordinates==""] <- NA 
@@ -81,8 +82,23 @@ avalInfo$BuriedFully <- avalInfo$Buried...Fully
 avalInfo$BuriedPartly <- avalInfo$Buried...Partly
 avalInfo$Buried...Fully <- NULL
 avalInfo$Buried...Partly <- NULL
+
+#Set all blanks equal to NA
+avalInfo$WeakLayer[avalInfo$WeakLayer ==''] <- NA
+avalInfo$Aspect[avalInfo$Aspect==''] <- NA
+avalInfo$Trigger[avalInfo$Trigger==''] <- NA
+
+
+
+
+#Create avalanche and weather data frame
+#Merge data sets
+#Merge the avalanche and weather data sets by date
+aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
+#Merge the combined data set with the wind info
+aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
 #Create data frame for caught, carried, and buried
-ccb <- data.frame(date=aw_df$Date, Caught=aw_df$Caught, Carried=aw_df$Carried, Buried.Partly=aw_df$Buried...Partly, Buried.Fully=aw_df$Buried...Fully)
+ccb <- data.frame(date=aw_df$Date, Caught=aw_df$Caught, Carried=aw_df$Carried, BuriedPartly=aw_df$BuriedPartly, BuriedFully=aw_df$BuriedFully)
 # Now use that data frame to gather column names into a key "TypeOfRide" variable
 ccb <- melt(ccb, id.vars="date", na.rm=T)
 #Change column names
@@ -136,11 +152,6 @@ weatInfo$WT03 <- NULL
 # Create ordered data (in this case I ordered it so that NE is centered, because then it looks normal)
 #avalInfo$Aspect = factor(avalInfo$Aspect, levels=c("West", "Northwest", "North", "Northeast", "East", "Southeast", "South", ""), ordered = TRUE)
 
-#Merge data sets
-#Merge the avalanche and weather data sets by date
-#aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
-#Merge the combined data set with the wind info
-#aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
 
 #Creat full data frame, containing all dates
 fl_df <- merge(avalInfo, weatInfo, by.x = 'Date', by.y = 'DATE', all.y = TRUE, all.x = TRUE)
@@ -160,14 +171,20 @@ length(x[which(x=='05')])/length(x)
 fl_df <- fl_df[grep("-[01][567890]-", fl_df$Date),]
 
 
-#Create data frame that contains the number of avalanches that have occure
+#Create data frame that contains the number of avalanches that have occured
 numav <- fl_df
-numav <- numav[!duplicated(test$Date),]
+#numav <- numav[!duplicated(numav$Date),]
 #Create a did avalanche column
 library(plyr)
+#library(dplyr)
 temp <- ddply(avalInfo,.(Date),nrow)
 colnames(temp)[2] <- "NumberOfAvalanches"
-numav <- merge(numav, temp, by.x='Date', by.y='Date', all.x = TRUE)
+#Check that all the dates got encoded
+length(avalInfo$Date)==sum(temp$NumberOfAvalanches)
+#Merge the two numav and temp
+temp2 <- ddply(avalInfo, .(Date),summarise,NumberOfAvalanches=n(),Depth.mean=mean(Depth),Width.mean=mean(Width),Vertical.mean=mean(Vertical),Elevation.mean=mean(Elevation),Lat.mean=mean(Latitude),Long.mean=mean(Longitude))
+temp3 <- ddply(avalInfo, .(Date,Region,Place,Aspect,WeakLayer,Trigger),summarise,NumberOfAvalanches=n(), Depth.mean=mean(Depth),Width.mean=mean(Width),Vertical.mean=mean(Vertical),Elevation.mean=mean(Elevation),Lat.mean=mean(Latitude),Long.mean=mean(Longitude))
+#temp2 <- ddply(numav, .(Date), summarise, Depth.mean=mean(Depth),Width.mean=mean(Width),Vertical.mean=mean(Vertical),Elevation.mean=mean(Elevation),Lat.mean=mean(Latitude),Long.mean=mean(Longitude),Preci.mean=mean(Precipitation),SnowDepth.mean=mean(Snow_Depth),Snowfall.mean=mean(Snowfall),Max_Temperature.mean=mean(Max_Temperature),Min_Temperature.mean=mean(Min_Temperature),TempObs.mean=mean(Temperature_at_observation_time), AvgWindSpeed.mean=mean(Average_Wind_Speed),MaxWindSpeed.mean=mean(Max_Wind_Speed))
 #Replace NA with 0 in number of avalanches column
 numav$NumberOfAvalanches[is.na(numav$NumberOfAvalanches)] <- 0
 #Set values with NA and number of avalanches=0 to 0
