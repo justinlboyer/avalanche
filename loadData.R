@@ -145,3 +145,4 @@ for(i in years){
 }
 #Remove all the years in ery
 fl_df <- fl_df[grep(paste(years[ery],collapse = "|"), fl_df$Date, invert=TRUE),]
+
