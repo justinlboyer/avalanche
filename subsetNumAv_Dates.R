@@ -8,7 +8,7 @@ source(file="subsetDates.R" )
 #Create data frame that contains the number of avalanches that have occured
 numav <- no_out_dates_df
 library(plyr)
-library(dplyr)
+#library(dplyr)
 temp <- ddply(avalInfo,.(Date),nrow)
 colnames(temp)[2] <- "NumberOfAvalanches"
 #Check that all the dates got encoded
@@ -27,7 +27,7 @@ numav$Elevation[numav$NumberOfAvalanches==0] <- 0
 numav$Latitude[numav$NumberOfAvalanches==0] <- 0
 numav$Longitude[numav$NumberOfAvalanches==0] <- 0
 
-#Check that there are enough avalanches
+#Check that there are enough avalanches (is this still necessary?)
 store =0
 for (i in 1:100){
   store = store + sum(numav$NumberOfAvalanches[numav$NumberOfAvalanches==i])
