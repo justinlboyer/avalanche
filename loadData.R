@@ -61,6 +61,8 @@ avalInfo$Depth <-gsub("\"","",avalInfo$Depth)
 avalInfo$Depth <- as.numeric(as.character(avalInfo$Depth))
 #Multiply the feet by 12
 avalInfo$Depth[ftvals] <- avalInfo$Depth[ftvals]*12
+#Remove ftvals, because it is no longer needed
+rm(ftvals)
 
 
 # Fix Coordinates, so that they are split into lat and long
@@ -110,20 +112,21 @@ weatInfo$WT03 <- NULL
 aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
 #Merge the combined data set with the wind info
 aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
-
+#Remove entries with no date
+aw_df <- aw_df[complete.cases(aw_df$Date),]
 
 
 #Creat full data frame, containing all dates
 fl_df <- merge(avalInfo, weatInfo, by.x = 'Date', by.y = 'DATE', all.y = TRUE, all.x = TRUE)
 fl_df <- merge(fl_df, wndInfo, by.x='Date', by.y = 'DATE', all.x=TRUE)
 #Fill blanks with NA
-fl_df$WeakLayer[fl_df$WeakLayer ==""] <- NA
-fl_df$Aspect[fl_df$Aspect==''] <- NA
+#fl_df$WeakLayer[fl_df$WeakLayer ==""] <- NA
+#fl_df$Aspect[fl_df$Aspect==''] <- NA
 #Remove entries with no date
 fl_df <- fl_df[complete.cases(fl_df$Date),]
 
 
-#Remove all dates/months for which we do no avalanche info 07-09 July-September
+#Remove all dates/months for which have no avalanche info 07-09 July-September
 #First find out the range of the months in which avalanches occur
 x <- gsub("^[0-9]{4}-([0-9][0-9])-[0-9]{2}$",'\\1',avalInfo$Date)
 x <- as.numeric(as.character(na.omit(x)))
@@ -146,3 +149,5 @@ for(i in years){
 #Remove all the years in ery
 fl_df <- fl_df[grep(paste(years[ery],collapse = "|"), fl_df$Date, invert=TRUE),]
 
+#Remove values: i, x, y, years, ery because it is no longer needed
+rm(i, x, y, years, ery)
