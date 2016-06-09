@@ -1,7 +1,7 @@
 # Load data, clean and tidy it.
 
 #Set working directory
-setwd("C:/Users/Owner/Documents/DataScience/avalanche")
+#setwd("C:/Users/Owner/Documents/DataScience/avalanche")
 #Load in csv files
 avalInfo <- read.csv('avalanches_raw.csv')
 weatInfo <- read.csv('altaGuardWeather6516.csv', na.strings = -9999)
@@ -33,8 +33,12 @@ wndInfo$STATION <- NULL
 
 #Make the "dates variable", dates
 #Fix dates in month/day/year format to month-day-year(2)
-avalInfo$Date <- gsub("^([0-9]{2})/([0-9]{1,2})/[0-9]{2}([0-9]{2})$","\\1-\\2-\\3",avalInfo$Date)
-avalInfo$Date <- as.Date( as.character(avalInfo$Date), format="%m-%d-%y")
+avalInfo$Date <-gsub("^([0-9]{2})-([0-9]{1,2})-([0][0-9])$","\\1-\\2-20\\3",avalInfo$Date)
+avalInfo$Date <-gsub("^([0-9]{2})-([0-9]{1,2})-([01][0123456])$","\\1-\\2-20\\3",avalInfo$Date)
+avalInfo$Date <-gsub("^([0-9]{2})-([0-9]{1,2})-([23456789][0-9])$","\\1-\\2-19\\3",avalInfo$Date)
+avalInfo$Date <- gsub("^([0-9]{2})/([0-9]{1,2})/([0-9]{4})$","\\1-\\2-\\3",avalInfo$Date)
+
+avalInfo$Date <- as.Date( as.character(avalInfo$Date), format="%m-%d-%Y")
 weatInfo$DATE <-as.Date(as.character(weatInfo$DATE), format="%Y%m%d")
 wndInfo$DATE <- as.Date(as.character(wndInfo$DATE), format = "%Y%m%d")
 # Check that they are dates
@@ -57,6 +61,9 @@ avalInfo$Depth <-gsub("\"","",avalInfo$Depth)
 avalInfo$Depth <- as.numeric(as.character(avalInfo$Depth))
 #Multiply the feet by 12
 avalInfo$Depth[ftvals] <- avalInfo$Depth[ftvals]*12
+#Remove ftvals, because it is no longer needed
+rm(ftvals)
+
 
 # Fix Coordinates, so that they are split into lat and long
 # First introduce NA's
@@ -67,61 +74,80 @@ avalInfo$Coordinates <- colsplit(avalInfo$Coordinates,",", c("Latitude", "Longit
 avalInfo$Coordinates$Latitude <- gsub("\\b0\\b","", avalInfo$Coordinates$Latitude)
 avalInfo$Coordinates$Latitude <- as.numeric(as.character(avalInfo$Coordinates$Latitude))
 avalInfo$Coordinates$Longitude <- as.numeric(as.character(gsub("\\b0\\b","", avalInfo$Coordinates$Longitude)))
+#Change column names
+avalInfo$Latitude <- avalInfo$Coordinates$Latitude
+avalInfo$Longitude <- avalInfo$Coordinates$Longitude
+avalInfo$Coordinates <- NULL
+avalInfo$WeakLayer <- avalInfo$Weak.Layer
+avalInfo$Weak.Layer <- NULL
+avalInfo$BuriedFully <- avalInfo$Buried...Fully
+avalInfo$BuriedPartly <- avalInfo$Buried...Partly
+avalInfo$Buried...Fully <- NULL
+avalInfo$Buried...Partly <- NULL
 
-# Create ordered data (in this case I ordered it so that NE is centered, because then it looks normal)
-#avalInfo$Aspect = factor(avalInfo$Aspect, levels=c("West", "Northwest", "North", "Northeast", "East", "Southeast", "South", ""), ordered = TRUE)
+#Set all blanks equal to NA
+avalInfo$WeakLayer[avalInfo$WeakLayer ==''] <- NA
+avalInfo$Aspect[avalInfo$Aspect==''] <- NA
+avalInfo$Trigger[avalInfo$Trigger==''] <- NA
 
+# Remove variables that are not usable
+weatInfo$STATION <- NULL
+weatInfo$STATION_NAME <- NULL
+weatInfo$MDPR <- NULL
+weatInfo$MDSF <- NULL
+weatInfo$DAPR<- NULL
+weatInfo$DASF <- NULL
+weatInfo$WT01 <- NULL
+weatInfo$WT06 <- NULL
+weatInfo$WT05 <- NULL
+weatInfo$WT11 <- NULL
+weatInfo$WT04 <- NULL
+weatInfo$WT03 <- NULL
+
+
+
+#Create avalanche and weather data frame
 #Merge data sets
 #Merge the avalanche and weather data sets by date
 aw_df <- merge(avalInfo, weatInfo, by.x = "Date", by.y="DATE", all.y = FALSE)
 #Merge the combined data set with the wind info
 aw_df <- merge(aw_df,wndInfo, by.x = "Date", by.y = "DATE", all.x = TRUE, all.y = FALSE)
-#Remove data that is missing at least 90% of its observations
-aw_df$STATION <- NULL
-aw_df$STATION_NAME <- NULL
-aw_df$MDPR <- NULL
-aw_df$MDSF <- NULL
-aw_df$DAPR<- NULL
-aw_df$DASF <- NULL
-aw_df$WT01 <- NULL
-aw_df$WT06 <- NULL
-aw_df$WT05 <- NULL
-aw_df$WT11 <- NULL
-aw_df$WT04 <- NULL
-aw_df$WT03 <- NULL
+#Remove entries with no date
+aw_df <- aw_df[complete.cases(aw_df$Date),]
 
-#Create data frame for caught, carried, and buried
-ccb <- data.frame(date=aw_df$Date, Caught=aw_df$Caught, Carried=aw_df$Carried, Buried.Partly=aw_df$Buried...Partly, Buried.Fully=aw_df$Buried...Fully)
-# Now use that data frame to gather column names into a key "TypeOfRide" variable
-ccb <- melt(ccb, id.vars="date", na.rm=T)
-#Change column names
-colnames(ccb)[2] <- "TypeOfRide"
-colnames(ccb)[3] <- "TypeOfRideN"
-#Now merge ccb to aw_df
-aw_df_ccb <- merge(aw_df, ccb, by.x = "Date", all.x=FALSE, by.y="date", all.y=TRUE)
-#Remove unessecary columns
-aw_df_ccb$Caught <- NULL
-aw_df_ccb$Carried <- NULL
-aw_df_ccb$Buried...Fully <- NULL
-aw_df_ccb$Buried...Partly <- NULL
 
-#Create data frame injured or killed
-ik <- data.frame(date=aw_df$Date, Injured=aw_df$Injured , Killed=aw_df$Killed)
-# Now use that data frame to gather column names into a key "BodilyHarm" variable
-ik <- melt(ik, id.vars="date", na.rm=T)
-#Change column names
-colnames(ik)[2] <- "BodilyHarm"
-colnames(ik)[3] <- "BodilyHarmN"
-#Now merge ccb to aw_df creates to many duplicates
-aw_df_ik <- merge(aw_df, ik, by.x = "Date", all.x = FALSE, by.y="date", all.y=TRUE)
-#Remove unessecary columns
-aw_df_ik$Killed <- NULL
-aw_df_ik$Injured <- NULL
-#Remove the data that has been tidied into other data sets
-aw_df$Caught <- NULL
-aw_df$Carried <- NULL
-aw_df$Buried...Fully <- NULL
-aw_df$Buried...Partly <- NULL
-aw_df$Killed <- NULL
-aw_df$Injured <- NULL
+#Creat full data frame, containing all dates
+fl_df <- merge(avalInfo, weatInfo, by.x = 'Date', by.y = 'DATE', all.y = TRUE, all.x = TRUE)
+fl_df <- merge(fl_df, wndInfo, by.x='Date', by.y = 'DATE', all.x=TRUE)
+#Fill blanks with NA
+#fl_df$WeakLayer[fl_df$WeakLayer ==""] <- NA
+#fl_df$Aspect[fl_df$Aspect==''] <- NA
+#Remove entries with no date
+fl_df <- fl_df[complete.cases(fl_df$Date),]
 
+
+#Remove all dates/months for which have no avalanche info 07-09 July-September
+#First find out the range of the months in which avalanches occur
+x <- gsub("^[0-9]{4}-([0-9][0-9])-[0-9]{2}$",'\\1',avalInfo$Date)
+x <- as.numeric(as.character(na.omit(x)))
+# Check
+for(i in 7:9){
+  print(length(na.omit(x[x==i]))==0)
+}
+#Remove months dates from 06-10 inclusive
+fl_df <- fl_df[grep("^[0-9]{4}-[0][789]-[0-9]{2}$", fl_df$Date, invert=TRUE),]
+#Same for years
+#First find out the range of the years in which avalanches have been recorded
+y <- na.omit(gsub("^([0-9]{4})-[0-9][0-9]-[0-9]{2}$",'\\1',avalInfo$Date))
+y <- as.numeric(y)
+#Create a vector that contains the years that need to be removed
+ery <-c()
+years <- c(1958:2016)
+for(i in years){
+  ery <- c(ery,length(y[y==i])==0)
+}
+#Remove all the years in ery
+fl_df <- fl_df[grep(paste(years[ery],collapse = "|"), fl_df$Date, invert=TRUE),]
+
+#Remove values: i, x, y, years, ery because it is no longer needed
+rm(i, x, y, years, ery)

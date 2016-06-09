@@ -1,0 +1,161 @@
+\documentclass[12pt]{article}
+
+\usepackage{exsheets}
+
+%\usepackage[pdf]{pstricks}
+%\usepackage{pstricks-add}
+
+%\usepackage{tikz} 
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext}  
+\usepackage{amsthm} 
+\usepackage{array}
+\usepackage{mathtools}
+\mathtoolsset{showonlyrefs} 
+\usepackage{graphicx,hyperref}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage[top=1.5cm, bottom=1.5cm, left=.5in, right=.5in]{geometry}
+\usepackage{enumerate}
+\usepackage{multicol}
+
+\newcommand{\ssol}{\vspace{3em}}
+\newcommand{\lsol}{\vspace{10em}}
+\newcommand{\blnk}{{\underline {\hspace{1.5in}}}}
+
+\usepackage{listings}
+
+\setcounter{secnumdepth}{0} % Turns off automatic numbering of sections.
+
+\SetupExSheets{headings=block}
+
+
+
+\begin{document}
+\section*{Cookbook for tidying avalanche data}
+\subsection*{LoadDate.R}
+This code loads the data and tidies it into two different data frames.
+\paragraph*{Downloading and Reading Data}
+The data on the avalanches may be downloaded manually at:\\ \url{https://utahavalanchecenter.org/avalanches/download}\\
+
+The data on the weather is downloaded from the NOAA.  For the data set for the Alta Guard Station located at Alta Ski Resort in Little Cottonwood Canyon go to \url{http://www.ncdc.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND:USC00420072/detail} add to cart, I selected all the variables and used R to remove the variables that were not useful due to lack of data.  Weather data for Salt Lake city can be found at \url{http://www.ncdc.noaa.gov/cdo-web/datasets/GHCND/locations/CITY:US490006/detail}.  I decided not to use this information since the Wasatch is a micro-climate that can have completely different weather than Salt Lake City.  As a point of reference the link to the NOAA's datasets is \url{https://www.ncdc.noaa.gov/data-access}\\
+
+The Alta Guard Station does not include data pertaining to wind events.  Since wind is a fundamental cause of snow-pack destabilization I retrieved data for wind events from: \url{http://www.ncdc.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND:USS0011J69S/detail}.  The Louis Meadow station was chosen for the wind events, because it is nearest station located in the Wasatch at an altitude similar to Big and Little Cottonwood Canyons.
+
+The data is then read into R, the NOAA encoded NA as -9999, so this is passed into the read.csv function.
+
+\paragraph*{Description of variables}
+The following is a description of the variables in addition to the changes of the variables names into human readable forms.
+\begin{itemize}
+\item PRCP $->$ Precipitation - the amount of precipitation - (in tenths of mm)
+\item SNWD $->$ Snow\_Depth - the depth of the snow pack - (in mm)
+\item SNOW $->$ Snowfall - amount of snowfall in 24 hour period - (in mm)
+\item TMAX $->$ Max\_Temperature - the maximum temperature in 24 hour period - (in tenths of $C\deg$)
+\item TMIN $->$ Min\_Temperature - the minimum temperature in 24 hour period - (in tenths of $C\deg$)
+\item TOBS $->$ Temperature\_at\_observation\_time - the temperature at a random observation time - (in tenths of $C\deg$)
+\item AWND $->$ Average\_Wind\_Speed - the average wind speed during a 24 hour period - (in meters per second)
+\item WSFI $->$ Max\_Wind\_Speed - the maximum wind speed during a 24 hour period - (in meters per second)
+\item Date - the date pertaining to the avalanche/weather/wind event - (in month-day-year)
+\item Region - the general location in Utah that avalanche occurred in
+\item Place - the locally or forest service name for the location of the avalanche
+\item Trigger - the cause of the avalanche
+\item Depth - the depth of the avalanche that occurred - (in inches)
+\item Width - the width of the avalanche from flank to flank that occurred (in feet)
+\item Vertical - the distance the avalanche traveled from crown to stauchwall (I believe, it could also be crown to debris pile) - (in feet)
+\item Aspect - the positioning of the slope in relation to the compass
+\item Elevation - the altitude the avalanche occurred at - (measured in feet)
+\item Caught - the number of people caught in the avalanche
+\item Carried - the number of people carried in the avalanche
+\item Injured - the number of people injured by the avalanche
+\item Killed - the number of people killed in the avalanche
+\item Latitude - the latitude of the avalanche - (in degrees)
+\item Longitude - the longitude of the avalanche - (in degrees)
+\item WeakLayer - the layer the avalanche failed on
+\item BuriedFully - the number of people who were fully buried by the avalanche
+\item BuriedPartly - the number of people were partly buried by the avalanche
+\end{itemize}
+
+\paragraph*{Make dates variable "Date"}
+The avalanche dates data came in mixed forms, but all of it was in month followed by day followed by year.  So for each different format the dates are put into month-day-year.  First the two digit 2000's are taken care of.  Then the dates with two digits of the 2010s, then the two digit 1920s and up are taken care of.  Finally the four digit dates are encoded.
+
+The dates are then assigned the class of dates and checked.
+
+
+\paragraph*{Variables recorded as characters}
+Some variables are thought to be characters despite being numeric so these variables are forced to be numeric.  This necessarily introduces some NAs.
+
+\paragraph*{Fix the Depth units}
+The Depth variable had observations that were in feet and inches.  This is fixed and all foot measurements are converted into inches.
+
+\paragraph*{Split Latitude and Longitude}
+The latitude and longitude were contained in one column, I split these out into their own columns.
+
+\paragraph*{Blanks set to NA}
+All blank cells were converted to NAs
+
+\paragraph*{Removed variables}
+The following  is list of variables that were deemed unfit and removed from the data set.   The reason they were removed is included
+\begin{itemize}
+\item STATION - Not useful, because we know what information came from which station.
+\item STATION\_NAME - not useful for the same reason STATION is not useful
+\item MDPR - not enough observations to be included
+\item MDSF - not enough observations to be included
+\item DAPR - not enough observations to be included
+\item DASF - not enough observations to be included
+\item WT01 - not enough observations to be included
+\item WT06 - not enough observations to be included
+\item WT05 - not enough observations to be included
+\item WT11 - not enough observations to be included
+\item WT04 - not enough observations to be included
+\item WT03 - not enough observations to be included
+\end{itemize}
+
+\paragraph*{Creation of data frames}
+Two data frames were created one that only contains observations of the avalanches that occurred (aw\_df) and the weather and wind information that correspond to each avalanche.  Another data frame was created that contains all possible observations of dates (fl\_df) during which avalanches could occur and the weather and wind that correspond is also made.  Also the dates that are NA are remove.
+
+\subparagraph*{The fl\_df}
+This data frame contains all the possible dates for which avalanches could occur.  In other words, there are no observations for avalanches in August, so the month of August could safely be removed.  All the possible range of dates for which avalanches have occurred are identified, and the complement of this set is removed from the data frame.  This includes the years for which only an insignificant number of avalanches was recorded.
+
+
+\subsection*{subsetDates.R}
+This script subsets the fl\_df further so that only significant dates are included.  Put another way all the outlier dates, such as avalanches that occurred in June are removed.\\
+
+First this code loads the data frames.  It then parses out the months into a vector, so that the occurrence of the months may be analyzed.  This vector is then looped over mod i so that the fact the winter months are split by the new year does not affect the possibility that an outlier.  The possible outliers are then checked for how much of the overall data they compose.  It was found that May only has 0.855\% of the avalanches that occurred, June only 0.132\%, and October only 0.132\%.  Because of this, the months from May to October were removed from the data frame.\\
+
+This same process is done for the years.  So first the years were parsed to a vector, for which we could analyze for outliers.  First the percentage of years was inspected, it was found that this compared to the outliers determined by boxplot.stats were comparable.  So these outliers are assigned to a vector to be removed from the data frame.
+
+\subsection*{subsetNumAv\_Dates.R}
+This script subsets the data into observations of dates.  Because of this, a new variable is recorded that records the number of avalanches that occurred on the given date.  This collapses the variables of the different avalanches that occurred on a given date, because of this the mean of the variables was taken.\\
+
+First the script loads the data.  It then counts the number of avalanches that occurred and assigns it to a temporary data frame.  The fact that this was done correctly is then checked.
+All the dates previously in subsetDates.R that were decided to be outliers are removed, as are any NAs.\\
+
+A new data frame that will contain each date as an observation is then created, which takes the mean of any variables for which multiple avalanches occurred. It then merges this data frame with the number of avalanches that occurred and assigns 0 to all variables for which there were no recorded avalanches.
+
+\subsection*{subsetIK.R}
+This script subsets the data into observations of bodily harm.\\
+
+First the data is loaded.  The observation variables (Injured, and Killed) are passed to a new data frame which is then melted and merged to the aw\_df data frame.  All non harmed observations are then removed.
+
+\subsection*{subsetCCB.R}
+This script subsets the data to observations of avalanches that took people for a ride.\\
+
+The processing for this data frame is exactly the same as for subsetIK.R, except the variables parsed for the observations are Caught, Carried, BuriedPartly, and BuriedFully used.
+
+
+
+\end{document}
+
+
+\begin{pspicture}
+\psgrid[unit=.05\linewidth, subgriddiv=1, linewidth=.01 gridlabels=0pt, gridcolor=gray, griddots=10](0,0)(-10,-10)(10,10) 
+\psaxes[unit=.05\linewidth, linewidth=.1 labelFontSize=\scriptscriptstyle]{<->}(0,0)(-10.5,-10.5)(10.5,10.5)
+\end{pspicture}
+
+
+\begin{tikzpicture}[scale=.5]	
+\draw[help lines] (0,0) grid (20,20);
+\end{tikzpicture}
+
+
