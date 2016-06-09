@@ -12,18 +12,10 @@ ik <- melt(ik, id.vars="date", na.rm=T)
 #Change column names
 colnames(ik)[2] <- "BodilyHarm"
 colnames(ik)[3] <- "BodilyHarmN"
-#Now merge ccb to aw_df creates to many duplicates
+#Now merge ik to aw_df creates too many duplicates
 ik <- merge(aw_df, ik, by.x = "Date", all.x = FALSE, by.y="date", all.y=TRUE)
 #Remove all non harmed observations
 ik <- ik[!is.na(ik$BodilyHarmN),]
 #Remove unessecary columns
 ik$Killed <- NULL
 ik$Injured <- NULL
-
-#Remove the data that has been tidied into other data sets
-#avalInfo$Caught <- NULL
-#avalInfo$Carried <- NULL
-#avalInfo$BuriedFully <- NULL
-#avalInfo$BuriedPartly <- NULL
-#avalInfo$Killed <- NULL
-#avalInfo$Injured <- NULL
