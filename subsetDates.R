@@ -22,6 +22,7 @@ for(i in unique(poss.outlier)){
 #Now we can see that may (0.855% of the data), june (0.132% of the data) and october (0.132% of the data) are outliers, so remove those months
 #Remove months dates from 06-10 inclusive
 no_out_dates_df <- fl_df[grep("-[01][67890]-", fl_df$Date, invert = TRUE),]
+
 #Same for years
 #First find out the range of the years in which avalanches have been recorded
 y <- na.omit(gsub("^([0-9]{4})-[0-9][0-9]-[0-9]{2}$",'\\1',avalInfo$Date))
@@ -37,3 +38,6 @@ outlier.years <- unique(boxplot.stats(y)$out)
 #Remove all the years in ery
 no_out_dates_df <- no_out_dates_df[grep(paste(outlier.years,collapse = "|"), no_out_dates_df$Date, invert=TRUE),]
 
+
+#Remove all values no longer needed: i, x, y, poss.outlier, percen, outlier.years
+rm(i, x, y, poss.outlier, percen, outlier.years)
