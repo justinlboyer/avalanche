@@ -37,5 +37,5 @@ numav$Long.mean[numav$NumberOfAvalanches==0] <- 0
 
 
 #Remove values that are no longer needed: i, store
-rm(i, store)
+#rm(i, store)
 
