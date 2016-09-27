@@ -21,8 +21,8 @@ wndInfo <- read.csv('windLouisMeadow739480.csv')
 # Change names to be human readable
 library(reshape)
 weatInfo <- rename(weatInfo, c(PRCP = "Precipitation")) # in tenths of mm
-weatInfo <- rename(weatInfo, c(SNWD = "Snow_Depth")) # in mm
-weatInfo <- rename(weatInfo, c(SNOW = "Snowfall")) # in mm
+weatInfo <- rename(weatInfo, c(SNWD = "Snow_Depth")) # in 
+weatInfo <- rename(weatInfo, c(SNOW = "Snowfall")) # in 
 weatInfo <- rename(weatInfo, c(TMAX = "Max_Temperature")) # in tenths of degrees C
 weatInfo <- rename(weatInfo, c(TMIN = "Min_Temperature")) # in tenths of degrees C
 weatInfo <- rename(weatInfo, c(TOBS = "Temperature_at_observation_time")) # in tenths of degrees C
