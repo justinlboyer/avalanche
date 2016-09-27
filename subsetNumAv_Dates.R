@@ -2,7 +2,7 @@
 #This script subsets the data so that probabilities may be assesed
 #Load data and clean it
 #source(file='loadData.R')
-source(file="subsetDates.R" )
+source(file="subsetDates.R")
 
 
 #Create data frame that contains the number of avalanches that have occured
@@ -33,6 +33,7 @@ numav$Vertical.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Elevation.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Lat.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Long.mean[numav$NumberOfAvalanches==0] <- 0
+
 
 
 
