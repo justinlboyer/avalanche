@@ -1,4 +1,4 @@
-#This script subsets the data so that probabilities may be assesed
+#This script subsets the data into caught carried buried so that probabilities may be assesed
 #Load data and clean it
 source(file="loadData.R" )
 
