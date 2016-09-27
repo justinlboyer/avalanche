@@ -69,11 +69,30 @@ summary(lm(Vertical~SNWD, data = fl_df)) #With good significance levels and reje
 summary(lm(Elevation~SNWD, data = fl_df)) #With good significance levels and rejection of null
 #As Snowfall increases so does depth/width/vertical/elevation
 summary(lm(Depth~SNOW, data = fl_df)) 
-summary(lm(Width~SNOW, data = fl_df)) #With good significance levels and rejection of null
+summary(lm(Width~Snowfall, data = fl_df)) #With good significance levels and rejection of null
 summary(lm(Vertical~SNOW, data = fl_df)) #Can't reject null 
-summary(lm(Elevation~SNOW, data = fl_df)) #Can't reject null 
+summary(lm(Elevation~Snowfall, data = fl_df)) #Can't reject null 
 #As min temp increases so does depth/width/vertical/elevation
 
+
+
+
+#Looking at relationships between number of avalanches and everything
+#Load necessary data frames
+load(file="subsetNumAv_Dates.R")
+#Check all that could create prediction
+#Look at precip compared to
+summary(lm(NumberOfAvalanches~Preci.mean, data = binNumav)) #GOOD Reject Null, R2=.077
+summary(lm(NumberOfAvalanches~SnowDepth.mean, data = binNumav)) #Rej null r2=.011
+summary(lm(NumberOfAvalanches~Snowfall.mean, data = binNumav)) #Reject null r2=.0356
+summary(lm(NumberOfAvalanches~Max_Temperature.mean, data = binNumav)) #GOOD Reject null r2=.049
+summary(lm(NumberOfAvalanches~Min_Temperature.mean, data = binNumav)) #Reject null r2=.024
+summary(lm(NumberOfAvalanches~TempObs.mean, data = binNumav)) #Reject null r2=.036
+summary(lm(NumberOfAvalanches~AvgWindSpeed.mean, data = binNumav)) #Reject null r2<.01
+summary(lm(NumberOfAvalanches~MaxWindSpeed.mean, data = binNumav)) #Reject null r2<.01
+
+#Perhaps build model  off anything with r2>3%
+#So Preci,Snowfall,MaxTemp,TempObs
 
 
 #Load the library to plot with
