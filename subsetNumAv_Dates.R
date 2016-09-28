@@ -18,9 +18,11 @@ temp <- temp[grep("200[4-9]-|201[0-6]",temp$Date),]
 #Remove any NAs in Date
 temp <- temp[!is.na(temp$Date),]
 
+#Remove NAs in Aspect
+numav <-numav[!is.na(numav$Aspect),]
 
 #Create data frame with single dates
-numav <- ddply(numav, .(Date), summarise, Depth.mean=mean(Depth),Width.mean=mean(Width),Vertical.mean=mean(Vertical),Elevation.mean=mean(Elevation),Lat.mean=mean(Latitude),Long.mean=mean(Longitude),Preci.mean=mean(Precipitation),SnowDepth.mean=mean(Snow_Depth),Snowfall.mean=mean(Snowfall),Max_Temperature.mean=mean(Max_Temperature),Min_Temperature.mean=mean(Min_Temperature),TempObs.mean=mean(Temperature_at_observation_time), AvgWindSpeed.mean=mean(Average_Wind_Speed),MaxWindSpeed.mean=mean(Max_Wind_Speed))
+numav <- ddply(numav, .(Date), summarise, Depth.mean=mean(Depth),Width.mean=mean(Width),Vertical.mean=mean(Vertical),Elevation.mean=mean(Elevation),Lat.mean=mean(Latitude),Long.mean=mean(Longitude),Preci.mean=mean(Precipitation),SnowDepth.mean=mean(Snow_Depth),Snowfall.mean=mean(Snowfall),Max_Temperature.mean=mean(Max_Temperature),Min_Temperature.mean=mean(Min_Temperature),TempObs.mean=mean(Temperature_at_observation_time), AvgWindSpeed.mean=mean(Average_Wind_Speed),MaxWindSpeed.mean=mean(Max_Wind_Speed),Aspect.count = Aspect[2]) #ifelse(length(names(table(Aspect)[which(table(numav$Aspect)==max(table(Aspect)))]))>1, "Northeast",names(table(Aspect)[which(table(numav$Aspect)==max(table(Aspect)))]))
 numav <- merge(numav, temp, by.x = 'Date', by.y = 'Date', all.x = TRUE, all.y = TRUE)
 #Remove the temp df
 rm(temp)
