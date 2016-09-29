@@ -32,7 +32,7 @@ val <- binNumav[-train.index,]
 
 #Check RMSE with just intercept
 sqrt(mean((mean(tr$NumberOfAvalanches)-val$NumberOfAvalanches)^2))
-#=1.454191
+#=2.392185
 
 #Test some simple linear models
 lm.fit1 <- lm(NumberOfAvalanches ~ Preci.mean + Snowfall.mean + Max_Temperature.mean + TempObs.mean, data = tr)
@@ -40,7 +40,7 @@ summary(lm.fit1)
 
 lm.pred1 <- predict(lm.fit1, newdata = val)
 sqrt(mean((lm.pred1-val$NumberOfAvalanches)^2))
-#=1.4148
+#=2.472856
 
 #Try all varis
 lm.fit2 <- lm(NumberOfAvalanches ~ ., data = tr)
@@ -48,7 +48,7 @@ summary(lm.fit2)
 
 lm.pred2 <- predict(lm.fit2, newdata = val)
 sqrt(mean((lm.pred2-val$NumberOfAvalanches)^2))
-#=0.982095
+#=2.942377
 
 
 #Modeling using ridge regression ~~Need to read about~~
@@ -73,14 +73,14 @@ plot(rr.fit, xvar = "lambda", label=TRUE)
 
 rr.pred <- predict(rr.fit, s=rr.bestlam, newx = x.val)
 sqrt(mean(rr.pred-y.val)^2)
-#=0.1580447
+#=0.2365488
 
 
 #Modeling using ridge regression BUT with variables which are available on day to day
-x.tr2 <- model.matrix(NumberOfAvalanches ~ Preci.mean + SnowDepth.mean + Snowfall.mean + Max_Temperature.mean + Min_Temperature.mean + MaxWindSpeed.mean, data = tr)[,-1]
+x.tr2 <- model.matrix(NumberOfAvalanches ~ Preci.mean + SnowDepth.mean + Snowfall.mean + Max_Temperature.mean + Min_Temperature.mean + MaxWindSpeed.mean+ Aspect.count, data = tr)[,-1]
 y.tr2 <- tr$NumberOfAvalanches
 
-x.val2 <- model.matrix(NumberOfAvalanches ~ Preci.mean + SnowDepth.mean + Snowfall.mean + Max_Temperature.mean + Min_Temperature.mean + MaxWindSpeed.mean, data = val)[,-1]
+x.val2 <- model.matrix(NumberOfAvalanches ~ Preci.mean + SnowDepth.mean + Snowfall.mean + Max_Temperature.mean + Min_Temperature.mean + MaxWindSpeed.mean+ Aspect.count, data = val)[,-1]
 y.val2 <- val$NumberOfAvalanches
 
 #CV to obtain best lambda
@@ -97,15 +97,15 @@ plot(rr.fit2, xvar = "lambda", label=TRUE)
 
 rr.pred2 <- predict(rr.fit2, s=rr.bestlam, newx = x.val2)
 sqrt(mean(rr.pred2-y.val2)^2)
-#=0.2433208
+#=0.3470795
 
 #Check accuracy
 misClassError <- mean(trunc(rr.pred2) != val$NumberOfAvalanches)
 print(paste('Accuracy', 1-misClassError))
 
 ## Model is pretty good so save it and use in shiny app
-save(rr.fit2, file = "rr.fit_PSSTTW.rda")
-save(rr.bestlam, file = "rr.bestlam.R")
+#save(rr.fit2, file = "rr.fit_PSSTTW.rda")
+#save(rr.bestlam, file = "rr.bestlam.R")
 
 #Now lasso
 set.seed(10)
@@ -121,7 +121,7 @@ plot(las.fit, xvar ="lambda", label = TRUE)
 
 las.pred <- predict(las.fit, s = las.bestlam, newx = x.val)
 sqrt(mean((las.pred - y.val)^2))
-#=0.35688 Not better than linear
+#=2 Not better than linear
 
 #Try logistic
 # Make dependent value binary for purposes of logistic regression
