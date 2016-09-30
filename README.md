@@ -2,7 +2,8 @@
 Project in R on avalanches in Wasatch
 
 If you are interested in contributing please do!
-# Contents 
+## Contents 
+..*
  ~ Cookbook.tex - documentation of the data cleaning process
  ~ ModelReg.R - script containing different regession models
  ~ NOAA_DATA_documentation.pdf - self explantory
