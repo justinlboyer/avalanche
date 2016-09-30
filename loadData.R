@@ -4,7 +4,7 @@
 #setwd("C:/Users/Owner/Documents/DataScience/avalanche")
 #Load in csv files
 avalInfo <- read.csv('avalanches_raw.csv')
-weatInfo <- read.csv('altaGuardWeather6516.csv', na.strings = -9999)
+weatInfo <- read.csv('altaGuardWeather080716.csv', na.strings = -9999)
 
 # How to Download data 
 # Avalanche data may be downloaded manually at "https://utahavalanchecenter.org/avalanches/download"
@@ -16,7 +16,7 @@ weatInfo <- read.csv('altaGuardWeather6516.csv', na.strings = -9999)
 # Got wind data from: http://www.ncdc.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND:USS0011J69S/detail
 # Picked this location, because it had the largest date range, and is also in the mountains
 # The location fo the station is north of the canyons, it is called Louis Meadow
-wndInfo <- read.csv('windLouisMeadow739480.csv')
+wndInfo <- read.csv('windLouisMeadow080716.csv')
 
 # Change names to be human readable
 library(reshape)
