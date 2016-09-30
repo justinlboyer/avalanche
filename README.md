@@ -2,7 +2,7 @@
 Project in R on avalanches in Wasatch
 
 If you are interested in contributing please do!
-# Contents '''
+# Contents 
  ~ Cookbook.tex - documentation of the data cleaning process
  ~ ModelReg.R - script containing different regession models
  ~ NOAA_DATA_documentation.pdf - self explantory
@@ -28,24 +28,24 @@ If you are interested in contributing please do!
  ~ subsetDates.R - subsets and oraganizes data by dates (required by pretty much everything)
  ~ subsetIK.R - subsets data by injured and killed, only used in data analysis
  ~ subsetNumAv_Dates.R - subsets and organizes the data by number of avalanches that occured (required by all models and apps)
- ~ windLouisMeadow080716.csv - dataset containing wind information, procured August 7, 2016'''
+ ~ windLouisMeadow080716.csv - dataset containing wind information, procured August 7, 2016
  
  
  ##Building model
  - Required files: 
-''' avalanches_raw.csv
+ avalanches_raw.csv
  altaGuardWeather6516.csv
  windLouisMeadow080716.csv
  loadData.R
  subsetDates.R
  subsetNumAv_Dates.R
- ModelReg.R '''
+ ModelReg.R 
 
  - Open ModelReg.R and execute the lines you are interested in, there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
  
  ##Checking model
- '''rrfun.R
- checkAccRidReg.R'''
+ rrfun.R
+ checkAccRidReg.R
  
  ##Looking to help?
  (In no order)
