@@ -32,8 +32,8 @@ If you are interested in contributing please do!
  
  
  ##Building model
- - Required files: 
- +avalanches_raw.csv
+ ..- Required files: 
+ ..+avalanches_raw.csv
  +altaGuardWeather6516.csv
  +windLouisMeadow080716.csv
  +loadData.R
@@ -41,15 +41,15 @@ If you are interested in contributing please do!
  +subsetNumAv_Dates.R
  +ModelReg.R 
 
- - Open ModelReg.R and execute the lines you are interested in, there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
+ ..- Open ModelReg.R and execute the lines you are interested in, there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
  
  ##Checking model
- +rrfun.R
+ ..+rrfun.R
  +checkAccRidReg.R
  
  ##Looking to help?
- -(In no order)
- *Improve documentation
+ ..-(In no order)
+ ..*Improve documentation
  *Build script to pull down current weather data, so that we don't have to enter it by hand
  *Check my work
  *Any of your own ideas you bring to the table
