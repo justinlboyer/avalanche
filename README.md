@@ -5,7 +5,7 @@ If you are interested in contributing please do!
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Contents
+# Contents
  ~ Cookbook.tex - documentation of the data cleaning process
  ~ ModelReg.R - script containing different regession models
  ~ NOAA_DATA_documentation.pdf - self explantory
@@ -35,7 +35,7 @@ If you are interested in contributing please do!
  
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
- ##Building model
+ #Building model
  - Required files: 
  avalanches_raw.csv
  altaGuardWeather6516.csv
@@ -46,11 +46,11 @@ If you are interested in contributing please do!
  ModelReg.R
  - Open ModelReg.R and execute the lines you are interested in, there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
  
- ##Checking model
+ #Checking model
  rrfun.R
  checkAccRidReg.R
  
- ##Looking to help?
+ #Looking to help?
  (In no order)
  Improve documentation
  Build script to pull down current weather data, so that we don't have to enter it by hand
