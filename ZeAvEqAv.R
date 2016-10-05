@@ -14,10 +14,9 @@ binNumav$Width.mean <- NULL
 binNumav$Vertical.mean <- NULL
 binNumav <- na.omit(binNumav)
 
-bkupBNMV <- binNumav
-
 #Build df with a random assortment of 903 NoA 0s
 test<-sample(nrow(binNumav[binNumav$NumberOfAvalanches==0,]), 903, replace=FALSE)
+bkupBNMV <- binNumav
 binNumav <-binNumav[binNumav$NumberOfAvalanches != 0,]
 binNumav <- rbind(binNumav,bkupBNMV[test,])
 rm(test, bkupBNMV)
