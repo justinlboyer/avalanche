@@ -48,7 +48,7 @@ If you are interested in contributing please do!
  + checkAccRidReg.R
  
  ##Looking to help?
- - (In no order)
+ - (In no particular order)
  - [ ] Improve documentation
  - [ ] Build script to pull down current weather data, so that we don't have to enter it by hand
  - [ ] Check my work
