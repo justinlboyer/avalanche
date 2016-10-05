@@ -34,9 +34,13 @@ numav$NumberOfAvalanches[is.na(numav$NumberOfAvalanches)] <- 0
 numav$Depth.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Width.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Vertical.mean[numav$NumberOfAvalanches==0] <- 0
-numav$Elevation.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Lat.mean[numav$NumberOfAvalanches==0] <- 0
 numav$Long.mean[numav$NumberOfAvalanches==0] <- 0
+
+#Randomize elevations for 0 avalanches
+samelev <- sample(nrow(numav[numav$Elevation.mean!=0,]), nrow(numav[numav$NumberOfAvalanches==0,]), replace=FALSE)
+numav$Elevation.mean[numav$NumberOfAvalanches==0] <- numav$Elevation.mean[samelev]
+
 
 #Set NA's in Aspect to random aspect, so that aspect is usable
 Ns <- length(numav$Aspect.count[is.na(numav$Aspect.count)])
