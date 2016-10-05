@@ -90,6 +90,11 @@ avalInfo$WeakLayer[avalInfo$WeakLayer ==''] <- NA
 avalInfo$Aspect[avalInfo$Aspect==''] <- NA
 avalInfo$Trigger[avalInfo$Trigger==''] <- NA
 
+#Set -9999 to NA
+#Fix 9999's on wind, setting to NA
+wndInfo$Max_Wind_Speed[wndInfo$Max_Wind_Speed==-9999] <- NA
+wndInfo$Average_Wind_Speed[wndInfo$Average_Wind_Speed==-9999] <- NA
+
 # Remove variables that are not usable
 weatInfo$STATION <- NULL
 weatInfo$STATION_NAME <- NULL
