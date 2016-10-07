@@ -22,7 +22,7 @@ binNumav <- na.omit(binNumav)
 # rm(test, bkupBNMV)
 
 #Set up binary on number of avalanches
-binNumav$NumberOfAvalanches[binNumav$NumberOfAvalanches!=0] <- 1
+#binNumav$NumberOfAvalanches[round(binNumav$NumberOfAvalanches)!=-round(NoAMean)] <- 1
 
 
 
@@ -71,5 +71,5 @@ misClassError <- mean(round(rr.pred2,0) != round(val$NumberOfAvalanches,0))
 print(paste('Accuracy', 1-misClassError))
 
 ## Model is pretty good so save it and use in shiny app
-save(rr.fit2, file = "some0rr.fit_PSSTTWEA.rda")
-save(rr.bestlam, file = "some0rr.bestlam_PSSTTWEA.R")
+#save(rr.fit2, file = "some0rr.fit_PSSTTWEA.rda")
+#save(rr.bestlam, file = "some0rr.bestlam_PSSTTWEA.R")

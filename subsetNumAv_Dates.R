@@ -48,8 +48,32 @@ numav$Aspect.count[is.na(numav$Aspect.count)] <- sample(levels(numav$Aspect.coun
 Bls <- length(numav$Aspect.count[numav$Aspect.count==""])
 numav$Aspect.count[numav$Aspect.count==""] <- sample(levels(numav$Aspect.count)[2:9],Bls, replace = TRUE)
 
+#Center data
+#First save all means
+DepthMean <- mean(numav$Depth.mean, na.rm=TRUE)
+WidthMean <- mean(numav$Width.mean, na.rm=TRUE)
+ElevMean <- mean(numav$Elevation.mean, na.rm=TRUE)
+PrecMean <- mean(numav$Preci.mean, na.rm=TRUE)
+SnowdMean <- mean(numav$SnowDepth.mean, na.rm=TRUE)
+SnowfMean <- mean(numav$Snowfall.mean, na.rm=TRUE)
+MxTMean <- mean(numav$Max_Temperature.mean, na.rm=TRUE)
+MnTMean <- mean(numav$Min_Temperature.mean, na.rm=TRUE)
+MxWMean <- mean(numav$MaxWindSpeed.mean, na.rm=TRUE)
+NoAMean <- mean(numav$NumberOfAvalanches, na.rm=TRUE)
+#Create a vector and save it
+daMeans <- c(DepthMean,WidthMean,ElevMean,PrecMean,SnowdMean,SnowfMean,MxTMean,MnTMean,MxWMean,NoAMean)
+save(daMeans, file = "TheMeans.R")
 
-
+numav$Depth.mean <- scale(numav$Depth.mean, center = T, scale = F)
+numav$Width.mean <- scale(numav$Width.mean, center = T, scale = F)
+numav$Elevation.mean <- scale(numav$Elevation.mean, center = T, scale = F)
+numav$Preci.mean <- scale(numav$Preci.mean, center = T, scale = F)
+numav$SnowDepth.mean <- scale(numav$SnowDepth.mean, center = T, scale = F)
+numav$Snowfall.mean <- scale(numav$Snowfall.mean, center = T, scale = F)
+numav$Max_Temperature.mean <- scale(numav$Max_Temperature.mean, center = T, scale = F)
+numav$Min_Temperature.mean <- scale(numav$Min_Temperature.mean, center = T, scale = F)
+numav$MaxWindSpeed.mean <- scale(numav$MaxWindSpeed.mean, center = T, scale = F)
+#numav$NumberOfAvalanches <- scale(numav$NumberOfAvalanches, center = T, scale = F)
 
 #Remove values that are no longer needed: i, store
 rm(Bls, Ns)
