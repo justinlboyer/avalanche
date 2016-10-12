@@ -22,12 +22,14 @@ binNumav <- na.omit(binNumav)
 # rm(test, bkupBNMV)
 
 #Set up binary on number of avalanches
+binNumav$NumberOfAvalanches[round(binNumav$NumberOfAvalanches)!=0] <- 1
+#If using scale in subsetNumAv_Dates need line below
 #binNumav$NumberOfAvalanches[round(binNumav$NumberOfAvalanches)!=-round(NoAMean)] <- 1
 
 
 
 #Split data into train and validate
-perTr <- 0.8 #Percent of data to split into training set
+perTr <- 0.9 #Percent of data to split into training set
 train.index <-sample(nrow(binNumav), nrow(binNumav)*perTr, replace=FALSE)
 tr <- binNumav[train.index,]
 val <- binNumav[-train.index,]
@@ -60,16 +62,20 @@ rr.pred2 <- tanh(rr.pred2)
 val$NumberOfAvalanches[val$NumberOfAvalanches!=0]<-1
 
 sqrt(mean(rr.pred2-val$NumberOfAvalanches)^2)
-#=0.3470795
+
 
 #Squash all values between 0 and 1
 rr.pred2[rr.pred2 <0] <- 0
 rr.pred2 <- tanh(rr.pred2)
 
 #Check accuracy
+print(confusionMatrix(round(rr.pred2,0), val$NumberOfAvalanches))
+
 misClassError <- mean(round(rr.pred2,0) != round(val$NumberOfAvalanches,0))
 print(paste('Accuracy', 1-misClassError))
 
 ## Model is pretty good so save it and use in shiny app
+save(rr.fit2, file = "some0rr.fit_PSSTTWEA_test.rda")
+save(rr.bestlam, file = "some0rr.bestlam_PSSTTWEA_test.R")
 #save(rr.fit2, file = "some0rr.fit_PSSTTWEA.rda")
 #save(rr.bestlam, file = "some0rr.bestlam_PSSTTWEA.R")
