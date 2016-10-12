@@ -50,6 +50,7 @@ If you are interested in contributing please do!
  ##Looking to help?
  - (In no particular order)
  - [ ] Improve documentation
+ - [ ] Rewrangle data so that number of avalanches is not included, just whether or not an avalanche occured and rerun analysis/regression
  - [ ] Build script to pull down current weather data, so that we don't have to enter it by hand
  - [ ] Check my work
  - [ ] Any of your own ideas you bring to the table
