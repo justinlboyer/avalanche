@@ -39,7 +39,7 @@ If you are interested in contributing please do!
  + loadData.R
  + subsetDates.R
  + subsetNumAv_Dates.R
- + ModelReg.R 
+ + ModelRegBiNumAv.R ~~ModelReg.R ~~
 
  - Open ModelReg.R and execute the lines you are interested in, there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
  
