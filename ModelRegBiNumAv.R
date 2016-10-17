@@ -25,10 +25,10 @@ val <- binumav[-train.index,]
 
 library(glmnet)
 #Modeling using ridge regression BUT with variables which are available on day to day
-x.tr2 <- model.matrix(Slid ~ Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature + Max_Wind_Speed + Elevation + Aspect, data = tr)[,-1]
+x.tr2 <- model.matrix(Slid ~ Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature, data = tr)[,-1]
 y.tr2 <- tr$Slid
 
-x.val2 <- model.matrix(Slid ~ Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature + Max_Wind_Speed + Elevation + Aspect, data = val)[,-1]
+x.val2 <- model.matrix(Slid ~ Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature, data = val)[,-1]
 y.val2 <- val$Slid
 
 #CV to obtain best lambda
@@ -75,7 +75,7 @@ lm.pred1 <- predict(lm.fit1, newdata = val)
 sqrt(mean((lm.pred1-val$Slid)^2))
 
 
-#Modeling using ridge regression ~~Need to read about~~
+#Modeling using ridge regression 
 library(glmnet)
 x.tr <- model.matrix(Slid ~ ., data = tr)[,-1]
 y.tr <- tr$Slid
