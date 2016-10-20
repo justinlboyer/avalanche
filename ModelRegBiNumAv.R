@@ -50,76 +50,75 @@ sqrt(mean(rr.pred2-y.val2)^2)
 misClassError <- mean(round(rr.pred2) != val$Slid)
 print(paste('Accuracy', 1-misClassError))
 library(caret)
-print(confusionMatrix(round(rr.pred2,0), val$Slid))
+rracc <- confusionMatrix(round(rr.pred2,0), val$Slid)
 
 
 ## Model is pretty good so save it and use in shiny app
-save(rr.fit2, file = "bi_rr.fit_PSSTTWEA.rda")
-save(rr.bestlam, file = "bi_rr.bestlam_PSSTTWEA.R")
-
-
-
-
-###########################Previous code, for finding best model
-
+save(rr.fit2, file = "ensembleSingleRR.rda")
+save(rr.bestlam, file = "ensembleSingleRRBestLam.R")
 
 
 #Check RMSE with just intercept
 sqrt(mean((mean(tr$Slid)-val$Slid)^2))
 
 #Test some simple linear models
-lm.fit1 <- lm(Slid ~ Precipitation + Snowfall + Max_Temperature + Max_Wind_Speed, data = tr)
+lm.fit1 <- lm(Slid ~ Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature, data = tr)
 summary(lm.fit1)
 
 lm.pred1 <- predict(lm.fit1, newdata = val)
 sqrt(mean((lm.pred1-val$Slid)^2))
 
+## Check accuracy
+lmacc <- confusionMatrix(round(lm.pred1,0), val$Slid)
 
-#Modeling using ridge regression 
-library(glmnet)
-x.tr <- model.matrix(Slid ~ ., data = tr)[,-1]
-y.tr <- tr$Slid
+#Save linear model
+save(lm.fit1, file = "ensembleLinear.rda")
 
-x.val <- model.matrix(Slid ~ ., data = val)[,-1]
-y.val <- val$Slid
 
-#CV to obtain best lambda
-set.seed(10)
-rr.cv <- cv.glmnet(x.tr, y.tr, alpha=0)
-plot(rr.cv)
-
-rr.bestlam <- rr.cv$lambda.min
-rr.goodlam <- rr.cv$lambda.1se
-
-# predict validation set using best lambda and calculate RMSE
-rr.fit <- glmnet(x.tr, y.tr, alpha = 0)
-plot(rr.fit, xvar = "lambda", label=TRUE)
-
-rr.pred <- predict(rr.fit, s=rr.bestlam, newx = x.val)
-sqrt(mean(rr.pred-y.val)^2)
 
 
 
 #Now lasso
 set.seed(10)
-las.cv <- cv.glmnet(x.tr, y.tr, alpha= 1)
+las.cv <- cv.glmnet(x.tr2, y.tr2, alpha= 1)
 plot(las.cv)
 
 las.bestlam <- las.cv$lambda.min
 las.goodlam <- las.cv$lambda.1se
 
 #predic validation set using best lamda and calc RMSe
-las.fit <- glmnet(x.tr, y.tr, alpha= 1)
+las.fit <- glmnet(x.tr2, y.tr2, alpha= 1)
 plot(las.fit, xvar ="lambda", label = TRUE)
 
-las.pred <- predict(las.fit, s = las.bestlam, newx = x.val)
-sqrt(mean((las.pred - y.val)^2))
+las.pred <- predict(las.fit, s = las.bestlam, newx = x.val2)
+sqrt(mean((las.pred - y.val2)^2))
+
+## Check accuracy
+lassacc <- confusionMatrix(round(las.pred,0), val$Slid)
+
+#Save Lasso
+save(las.fit, file = "ensembleLasso.rda")
+save(las.bestlam, file = "ensembleLasBestLam.R")
+
+
 
 
 #Try logistic
-mdl <-glm(tr$Slid~Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature + Max_Wind_Speed + Elevation + Aspect,family = quasibinomial(link = "logit"), data=tr)
+mdl <-glm(tr$Slid~Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature,family = binomial(link = "logit"), data=tr)
 summary(mdl)
 sqrt(mean(predict(mdl,newdata = val)-val$Slid)^2)
+logpred <- predict(mdl,newdata = val)
+logpred <- tanh(logpred)
+logpred[logpred < 0] <- 0
+## Check accuracy
+logacc <- confusionMatrix(round(logpred,0), val$Slid)
+
+#Save logistic model
+save(mdl, file = "ensembleLogistic.rda")
 
 
-## So Ridge Regression is best by far!!!
+#Save all the analysis on accuracy
+save(logacc, file = "LogisticAccuracy.R")
+save(lmacc, file = "LinearModelAccuracy.R")
+save(lassacc, file = "LassoAccuracy.R")
+save(rracc, file = "RidgeAccuracy.R")
