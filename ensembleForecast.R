@@ -20,12 +20,12 @@ binumav$Max_Wind_Speed <- NULL
 binumav <- na.omit(binumav)
 
 
-i <- 100 #Size of ensemble
+i <- 10 #Size of ensemble
 fit <- list()
 bestlam <- numeric(i)
 acc <- list()
 
-perTr <- 0.9 # Percent of data to train
+perTr <- 0.5 # Percent of data to train
 train.matrix <- matrix(, nrow = i, ncol = nrow(binumav)*perTr)
 for (i in 1:i) {
   train.matrix[i,] <- sample(nrow(binumav), nrow(binumav)*perTr, replace=TRUE) 
@@ -38,14 +38,14 @@ for (j in 1:i) {
 # Now use each model to provide a prediction
 av <- numeric(i)
 for (l in 1:i) {
-  av[l] <- predict(fit[[l]],s=bestlam[[l]],newx = t(x.val2[13,]))
+  av[l] <- predict(fit[[l]],s=bestlam[[l]],newx = t(x.val2[19,]))
 }
 table(av)
 print(max(table(round(av)))/length(av))
 
 #Save ridge regression ensemble
-save(fit, file = "ensembleRRFit.rda")
-save(bestlam, file = "ensembleBestLam.R")
+#save(fit, file = "ensembleRRFit.rda")
+#save(bestlam, file = "ensembleBestLam.R")
 
 
 
