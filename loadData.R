@@ -64,6 +64,7 @@ avalInfo$Depth[ftvals] <- avalInfo$Depth[ftvals]*12
 #Remove ftvals, because it is no longer needed
 rm(ftvals)
 
+detach("package:reshape", unload = TRUE)
 
 # Fix Coordinates, so that they are split into lat and long
 # First introduce NA's
@@ -156,3 +157,5 @@ fl_df <- fl_df[grep(paste(years[ery],collapse = "|"), fl_df$Date, invert=TRUE),]
 
 #Remove values: i, x, y, years, ery because it is no longer needed
 rm(i, x, y, years, ery)
+
+detach('package:reshape2', unload = TRUE)
