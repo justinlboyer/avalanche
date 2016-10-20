@@ -30,6 +30,7 @@ binumav$Place[is.na(binumav$Place)] <- sample(levels(binumav$Place),length(binum
 binumav$Elevation[is.na(binumav$Elevation)] <- sample(seq(5100,12400,200),length(binumav$Elevation[is.na(binumav$Elevation)]),replace = TRUE)
 
 #Remove values that are no longer needed: i, store
-rm(Bls, Ns)
+rm(Bls, Ns, keeps)
 
+detach("package:dplyr",unload = TRUE)
 
