@@ -50,3 +50,4 @@ for (i in 1:length(val$Slid)) {
 
 #Check accuracy of overall model
 overallAcc <- confusionMatrix(round(result,0), val$Slid)
+#save(overallAcc, file = "EnsembleForecastAccuracy.R")
