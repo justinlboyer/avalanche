@@ -8,11 +8,11 @@ rm(avalInfo, aw_df, fl_df, no_out_dates_df, weatInfo, wndInfo)
 binumav <- na.omit(binumav)
 
 #Visualize data
-library(ggplot2)
-ggplot(binumav, aes(y=Slid, x=Preci.mean)) + geom_point() + facet_wrap(~Max_Temperature.mean)
-ggplot(binumav, aes(y=Slid, x=Snowfall.mean)) + geom_point() + facet_wrap(~Max_Temperature.mean)
-ggplot(binumav, aes(y=Slid, x=Max_Temperature.mean)) + geom_point()
-ggplot(binumav, aes(y=Slid, x=TempObs.mean)) + geom_point()
+# library(ggplot2)
+# ggplot(binumav, aes(y=Slid, x=Preci.mean)) + geom_point() + facet_wrap(~Max_Temperature.mean)
+# ggplot(binumav, aes(y=Slid, x=Snowfall.mean)) + geom_point() + facet_wrap(~Max_Temperature.mean)
+# ggplot(binumav, aes(y=Slid, x=Max_Temperature.mean)) + geom_point()
+# ggplot(binumav, aes(y=Slid, x=TempObs.mean)) + geom_point()
 
 #Perhaps build model  off anything with r2>3%
 #So Preci,Snowfall,MaxTemp,TempObs
@@ -60,6 +60,8 @@ save(rr.bestlam, file = "ensembleSingleRRBestLam.R")
 
 #Check RMSE with just intercept
 sqrt(mean((mean(tr$Slid)-val$Slid)^2))
+interceptFit <- mean(tr$Slid)
+save(interceptFit,file =  "interceptFit.R")
 
 #Test some simple linear models
 lm.fit1 <- lm(Slid ~ Precipitation + Snow_Depth + Snowfall + Max_Temperature + Min_Temperature, data = tr)

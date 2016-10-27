@@ -5,27 +5,32 @@ load("ensembleLasBestLam.R")
 load("ensembleLasso.rda")
 load("ensembleLinear.rda")
 load("ensembleLogistic.rda")
+load("interceptFit.R")
 
 
 #Get input
-x.inDF <- data.frame(t(x.val2[14,]))
-x.in <- t(x.val2[14,])
+x.inDF <- data.frame(x.val2)
+colnames(x.inDF) <- c("Precipitation","Snow_Depth","Snowfall","Max_Temperature","Min_Temperature")
+x.in <- x.val2
 
 #Initialize Prediction vector
-pred <- numeric(13)
+pred <- matrix(nrow = length(val$Slid),ncol = 14)
 
 #Predict logistic
-pred[1] <- predict(mdl,newdata = x.inDF)
+pred[,1] <- predict(mdl,newdata = x.inDF)
 
 #Predict Lasso
-pred[2] <- predict(las.fit, s = las.bestlam, newx = x.in)
+pred[,2] <- predict(las.fit, s = las.bestlam, newx = x.in)
 
 #Predict Linear
-pred[3] <- predict.lm(lm.fit1, newdata = x.inDF)
+pred[,3] <- predict.lm(lm.fit1, newdata = x.inDF)
+
+#Predict Intercept
+pred[,4] <- interceptFit
 
 #Predict Using 10 RR models
-for (l in 4:13) {
-  pred[l] <- predict(fit[[l-3]],s=bestlam[[l-3]],newx = x.in)
+for (l in 5:14) {
+  pred[,l] <- predict(fit[[l-4]],s=bestlam[[l-4]],newx = x.in)
 }
 
 Mode <- function(x) {
@@ -38,6 +43,10 @@ pred[pred<0] <- 0
 pred <- tanh(pred)
 
 #Output result
-result <- Mode(round(pred))
-#Output probability
-Prob <- max(table(round(pred)))/length(pred)
+result <- numeric(length(val$Slid))
+for (i in 1:length(val$Slid)) {
+  result[i] <- Mode(round(pred[i,]))
+}
+
+#Check accuracy of overall model
+overallAcc <- confusionMatrix(round(result,0), val$Slid)
