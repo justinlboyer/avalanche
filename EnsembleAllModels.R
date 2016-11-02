@@ -5,7 +5,7 @@ load("ensembleLasBestLam.R")
 load("ensembleLasso.rda")
 load("ensembleLinear.rda")
 load("ensembleLogistic.rda")
-load("interceptFit.R")
+#load("interceptFit.R")
 
 
 #Get input
@@ -14,7 +14,7 @@ colnames(x.inDF) <- c("Precipitation","Snow_Depth","Snowfall","Max_Temperature",
 x.in <- x.val2
 
 #Initialize Prediction vector
-pred <- matrix(nrow = length(val$Slid),ncol = 14)
+pred <- matrix(nrow = length(val$Slid),ncol = 13)
 
 #Predict logistic
 pred[,1] <- predict(mdl,newdata = x.inDF)
@@ -26,11 +26,11 @@ pred[,2] <- predict(las.fit, s = las.bestlam, newx = x.in)
 pred[,3] <- predict.lm(lm.fit1, newdata = x.inDF)
 
 #Predict Intercept
-pred[,4] <- interceptFit
+#pred[,4] <- interceptFit
 
 #Predict Using 10 RR models
-for (l in 5:14) {
-  pred[,l] <- predict(fit[[l-4]],s=bestlam[[l-4]],newx = x.in)
+for (l in 4:13) {
+  pred[,l] <- predict(fit[[l-3]],s=bestlam[[l-3]],newx = x.in)
 }
 
 Mode <- function(x) {
