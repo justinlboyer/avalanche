@@ -124,3 +124,4 @@ save(logacc, file = "LogisticAccuracy.R")
 save(lmacc, file = "LinearModelAccuracy.R")
 save(lassacc, file = "LassoAccuracy.R")
 save(rracc, file = "RidgeAccuracy.R")
+
