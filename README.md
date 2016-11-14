@@ -49,9 +49,10 @@ If you are interested in contributing please do!
  
  ##Looking to help?
  - (In no particular order)
+ - [ ] Include feature scaling and renormalization
  - [ ] Improve documentation
  - [x] Rewrangle data so that number of avalanches is not included, just whether or not an avalanche occured and rerun analysis/regression
- - [ ] Develop an ensemble forecast, i.e., create multiple different models, then use these to develop a probability of whether or not an avalanche may occur
+ - [x] Develop an ensemble forecast, i.e., create multiple different models, then use these to develop a probability of whether or not an avalanche may occur
  - [ ] Build script to pull down current weather data, so that we don't have to enter it by hand
  - [ ] Check my work
  - [ ] Any of your own ideas you bring to the table
