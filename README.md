@@ -49,6 +49,7 @@ If you are interested in contributing please do!
  
  ##Looking to help?
  - (In no particular order)
+ - [ ] Reconsider feature choices (ex: water weight instead of precip)
  - [ ] Include feature scaling and renormalization
  - [ ] Improve documentation
  - [x] Rewrangle data so that number of avalanches is not included, just whether or not an avalanche occured and rerun analysis/regression
