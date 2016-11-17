@@ -4,32 +4,58 @@ Project in R on avalanches in Wasatch
 If you are interested in contributing please do!
 ## Contents 
  + Cookbook.tex - documentation of the data cleaning process
- + ModelReg.R - script containing different regession models
- + NOAA_DATA_documentation.pdf - self explantory
- + NoZAv_app.R - Shiny app that produces a model with all observations containing 0 avalanches removed, depends on:
-    -NoZee.bestlam.R - the best lambda
-    -NoZrr.fit_PSSTTW.rda - the saved model 
-    -NoZrr.fit_PSSTTWA.rda - the saved model with the addition of aspect
- + Original_app.r - the template all other shiny apps were built off
- + ZeAvEqAv.R - script that compares different regression models when 3/4 of the observations contain 0 avalanches (this was a decision on my part, conservatively arguing that 3 out of 4 days we should observe at least one avalanche.  Need to come back to and use poisson process to model more accurately)'''
- + altaGuardWeather080716.csv - dataset of weather from alta guard procured August 7, 2016
- + app.R - shint app that uses ridge regession model with all observations
- + avalanche.Rproj - workspace, might be usefull?
- + avalanches_raw.csv - dataset containing all avalanche data procured August 7, 2016
- + checkAccRidReg.R - script for checking accuracy of ridge regession model (needs rrfun.R)
- + dataAnalysis.R - somewhat deprecated, but rough premliminary analysis of data
- + downloadCurrentWU.R - a script to pull down the weather conditions at alta, not started
+ + ModelRegBiNumAv.R - Builds all models for ensemble forecast
+ + EnsembleAllModels.R - Creates ensemble forecast
+    -Requires:
+      +ensembleBestLam.R
+      +ensembleRRFit.rda
+      +ensembleLasBestLam.R
+      +ensembleLasso.rda
+      +ensembleLinear.rda
+      +ensembleLogistic.rda
+ + EnsembleRR_app.R - Script for a shiny app that loads models, then based on user input reports the probability of an avalanche occuring
+     -Requires:
+      +ensembleBestLam.R
+      +ensembleRRFit.rda
+      +ensembleLasBestLam.R
+      +ensembleLasso.rda
+      +ensembleLinear.rda
+      +ensembleLogistic.rda
+ + EnsembleForecastAccuracy.R - The accuracy of the ensemble forecast models
+ 
+ Required Files:
  + loadData.R - script loads data set, first cleaning
- + mostZrr.bestlam.R - best lambda from ZeAvEqAv.R (some0Av_app.R needs this file)
- + mostZrr.fit_PSSTWA.rda - model from ZeAvEqAv.R (some0Av_app.R needs this file)
- + rrfun.R - script needed by checkACCRidReg.R, builds model from training set
- + some0Av_app.R - shiny app that predicts number of avalanches: currently running at justinlboyer.shinyapps.io/avalanche/
  + subsetCCB.R - subsets data by caught, cleaned and buried only used in data analysis
  + subsetDates.R - subsets and oraganizes data by dates (required by pretty much everything)
  + subsetIK.R - subsets data by injured and killed, only used in data analysis
  + subsetNumAv_Dates.R - subsets and organizes the data by number of avalanches that occured (required by all models and apps)
  + windLouisMeadow080716.csv - dataset containing wind information, procured August 7, 2016
+ + altaGuardWeather080716.csv - dataset of weather from alta guard procured August 7, 2016
+ + avalanches_raw.csv - dataset containing all avalanche data procured August 7, 2016
+ + dataAnalysis.R - somewhat deprecated, but rough premliminary analysis of data
+ + downloadCurrentWU.R - a script to pull down the weather conditions at alta, not started
+ + avalanche.Rproj - workspace, might be usefull?
+
+ + ModelReg.R - script containing different regession models
+ + NOAA_DATA_documentation.pdf - self explantory
  
+ + checkAccRidReg.R - script for checking accuracy of ridge regession model (needs rrfun.R)
+ + rrfun.R - script needed by checkACCRidReg.R, builds model from training set
+ 
+ + ~~NoZAv_app.R - Shiny app that produces a model with all observations containing 0 avalanches removed, depends on:
+    -NoZee.bestlam.R - the best lambda
+    -NoZrr.fit_PSSTTW.rda - the saved model 
+    -NoZrr.fit_PSSTTWA.rda - the saved model with the addition of aspect
+ + Original_app.r - the template all other shiny apps were built off
+ + ZeAvEqAv.R - script that compares different regression models when 3/4 of the observations contain 0 avalanches (this was a decision on my part, conservatively arguing that 3 out of 4 days we should observe at least one avalanche.  Need to come back to and use poisson process to model more accurately)'''~~
+
+ + ~~app.R - shiny app that uses ridge regession model with all observations~~
+
+ + ~~mostZrr.bestlam.R - best lambda from ZeAvEqAv.R (some0Av_app.R needs this file)~~
+ + ~~mostZrr.fit_PSSTWA.rda - model from ZeAvEqAv.R (some0Av_app.R needs this file)~~
+
+ + ~~some0Av_app.R - shiny app that predicts number of avalanches: currently running at justinlboyer.shinyapps.io/avalanche/~~
+
  
  ##Building model
  - Required files: 
@@ -40,17 +66,19 @@ If you are interested in contributing please do!
  + subsetDates.R
  + subsetNumAv_Dates.R
  + ModelRegBiNumAv.R ~~ModelReg.R ~~
+ + EnsembleAllModels.R
 
- - Open ModelReg.R and execute the lines you are interested in, there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
+ - ModelRegBiNumAv.R and execute the script,  then execute EnsembleAllModels.R there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
  
  ##Checking model
- + rrfun.R
- + checkAccRidReg.R
+ + Now done in ModelRegBiNumAv.R and EnsembleAllModels.R ~~rrfun.R
+ + checkAccRidReg.R~~
  
  ##Looking to help?
  - (In no particular order)
  - [ ] Reconsider feature choices (ex: water weight instead of precip)
  - [ ] Include feature scaling and renormalization
+ - [ ] Build more models
  - [ ] Improve documentation
  - [x] Rewrangle data so that number of avalanches is not included, just whether or not an avalanche occured and rerun analysis/regression
  - [x] Develop an ensemble forecast, i.e., create multiple different models, then use these to develop a probability of whether or not an avalanche may occur
