@@ -64,12 +64,13 @@ If you are interested in contributing please do!
  - ModelRegBiNumAv.R and execute the script,  then execute EnsembleAllModels.R there are some lines which are necessary to execute in order to build training sets, etc.. Contact me if you are confused :)
  
  ##Checking model
- + Now done in ModelRegBiNumAv.R and EnsembleAllModels.R ~~rrfun.R~~
+ + Done in ModelRegBiNumAv.R and EnsembleAllModels.R which generate files of the accuracy
+ + ~~rrfun.R~~
  + ~~checkAccRidReg.R~~
  
  ##Looking to help?
  - (In no particular order)
- - [ ] Reconsider feature choices (ex: water weight instead of precip)
+ - [ ] Reconsider feature choices (ex: water weight instead of precip and snowfall)
  - [ ] Include feature scaling and renormalization
  - [ ] Build more models
  - [ ] Improve documentation
