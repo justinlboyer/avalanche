@@ -23,7 +23,7 @@ If you are interested in contributing please do!
       +ensembleLogistic.rda
  + EnsembleForecastAccuracy.R - The accuracy of the ensemble forecast models
  
- Required Files:
+ ###Required Files:
  + loadData.R - script loads data set, first cleaning
  + subsetCCB.R - subsets data by caught, cleaned and buried only used in data analysis
  + subsetDates.R - subsets and oraganizes data by dates (required by pretty much everything)
@@ -42,18 +42,11 @@ If you are interested in contributing please do!
  + checkAccRidReg.R - script for checking accuracy of ridge regession model (needs rrfun.R)
  + rrfun.R - script needed by checkACCRidReg.R, builds model from training set
  
- + ~~NoZAv_app.R - Shiny app that produces a model with all observations containing 0 avalanches removed, depends on:
-    -NoZee.bestlam.R - the best lambda
-    -NoZrr.fit_PSSTTW.rda - the saved model 
-    -NoZrr.fit_PSSTTWA.rda - the saved model with the addition of aspect
- + Original_app.r - the template all other shiny apps were built off
- + ZeAvEqAv.R - script that compares different regression models when 3/4 of the observations contain 0 avalanches (this was a decision on my part, conservatively arguing that 3 out of 4 days we should observe at least one avalanche.  Need to come back to and use poisson process to model more accurately)'''~~
-
+ ###Deprecated Files:
+ + ~~ZeAvEqAv.R - script that compares different regression models when 3/4 of the observations contain 0 avalanches (this was a decision on my part, conservatively arguing that 3 out of 4 days we should observe at least one avalanche.  Need to come back to and use poisson process to model more accurately)'''~~
  + ~~app.R - shiny app that uses ridge regession model with all observations~~
-
  + ~~mostZrr.bestlam.R - best lambda from ZeAvEqAv.R (some0Av_app.R needs this file)~~
  + ~~mostZrr.fit_PSSTWA.rda - model from ZeAvEqAv.R (some0Av_app.R needs this file)~~
-
  + ~~some0Av_app.R - shiny app that predicts number of avalanches: currently running at justinlboyer.shinyapps.io/avalanche/~~
 
  
