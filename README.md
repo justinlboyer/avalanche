@@ -70,6 +70,7 @@ If you are interested in contributing please do!
  
  ##Looking to help?
  - (In no particular order)
+ - [ ] Create a multiclass classification, so that the forecaster would reccommend an aspect and maybe? and elevation
  - [ ] Reconsider feature choices (ex: water weight instead of precip and snowfall)
  - [ ] Include feature scaling and renormalization
  - [ ] Build more models
