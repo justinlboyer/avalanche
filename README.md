@@ -70,10 +70,12 @@ If you are interested in contributing please do!
  
  ##Looking to help?
  - (In no particular order)
+ - [ ] Increasing the size of the data sets by including more data from the mesowest network!
  - [ ] Create a multiclass classification, so that the forecaster would reccommend an aspect and maybe? and elevation
  - [ ] Reconsider feature choices (ex: water weight instead of precip and snowfall)
  - [ ] Include feature scaling and renormalization
- - [ ] Build more models
+ - [ ] Build more models, using neural networks could be fun, and polynomial/nonlinear functions
+ - [ ] Clean up code, so that functions are called instead of everything being hardcoded
  - [ ] Improve documentation
  - [x] Rewrangle data so that number of avalanches is not included, just whether or not an avalanche occured and rerun analysis/regression
  - [x] Develop an ensemble forecast, i.e., create multiple different models, then use these to develop a probability of whether or not an avalanche may occur
